@@ -52,3 +52,11 @@ Semana tipo: Lun L, Mar L, Mié R, Jue Q, Vie Q+Q (bloque fuerte), Sáb V+F, Dom
 | Semana | Bloques planeados | Hechos | Deuda acum. | Notas / cambios |
 |---|---|---|---|---|
 | 1 (26-oct) | 11 | – | 0 | Setup pendiente |
+
+## Perfil y ajustes (26-oct-2026)
+- L1 aprobado feb-2025 (1710 vs MPS 1600). Más débil: Economía. Más fuerte: Derivados. Medios: Corporate Issuers, Portafolio.
+- Vive con padres; polola vie noche–dom mediodía; estudio sáb mañana en su casa y dom tarde.
+- Transporte sentado: lectura/subrayado en papel (extra, no cuenta como bloque). Semana ideal ahora = 10 bloques.
+- Eventos: 31-oct/1-nov cumpleaños polola; sáb 5 y 12-dic matrimonios; viaje en febrero por definir.
+- Material: Schweser impresos 2025/2026, mocks oficiales, BA II Plus. Seguimiento en `CFA_L2_Plan.xlsx`.
+- Tono ante atrasos: duro y amable según el caso, con estoicismo y potencial perdido.
