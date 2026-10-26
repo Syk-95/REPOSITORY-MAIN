@@ -60,3 +60,9 @@ Semana tipo: Lun L, Mar L, Mié R, Jue Q, Vie Q+Q (bloque fuerte), Sáb V+F, Dom
 - Eventos: 31-oct/1-nov cumpleaños polola; sáb 5 y 12-dic matrimonios; viaje en febrero por definir.
 - Material: Schweser impresos 2025/2026, mocks oficiales, BA II Plus. Seguimiento en `CFA_L2_Plan.xlsx`.
 - Tono ante atrasos: duro y amable según el caso, con estoicismo y potencial perdido.
+
+## Actualización (inicio 2-nov-2026)
+- El plan vigente está en `CFA_L2_Plan.xlsx` (reemplaza el calendario de arriba): inicio lunes 2-nov, examen supuesto 15-may-2027, 28 semanas.
+- Vacaciones de 10 días en febrero (supuesto 12–21 feb), matrimonios 5 y 12-dic con estudio en la mañana, acostarse antes de las 23:30 dom–jue, ejercicio por definir.
+- Schweser impresos 2025: verificar cambios de currículum según el año del examen.
+- Decisión mayo/noviembre: dom 4-abr-2027.
