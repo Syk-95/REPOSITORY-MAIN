@@ -66,3 +66,9 @@ Semana tipo: Lun L, Mar L, Mié R, Jue Q, Vie Q+Q (bloque fuerte), Sáb V+F, Dom
 - Vacaciones de 10 días en febrero (supuesto 12–21 feb), matrimonios 5 y 12-dic con estudio en la mañana, acostarse antes de las 23:30 dom–jue, ejercicio por definir.
 - Schweser impresos 2025: verificar cambios de currículum según el año del examen.
 - Decisión mayo/noviembre: dom 4-abr-2027.
+
+## Actualización (2-nov-2026)
+- Todo se corrió una semana: semana 0 = 2–8 nov (prearranque); semana 1 = lunes 9-nov.
+- Examen mayo 2027: ventana 18–22 may (fuentes de prep providers; confirmar en CFA Institute). Early registration ya cerró el 14-oct-2026; plazo estándar 10-feb-2027.
+- Decisión de inscripción a mayo antes del 10-feb (chequeo semana 12). Revisión de preparación el 11-abr.
+- Ética: material 2027 (reestructurada); LOS 3.e de Machine Learning eliminado desde 2026.
