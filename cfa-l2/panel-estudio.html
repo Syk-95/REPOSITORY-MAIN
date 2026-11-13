@@ -145,11 +145,11 @@ table.t input[type=number]{width:70px;padding:3px 6px}
         </div>
         <details style="margin-top:12px"><summary class="small muted" style="cursor:pointer">Duraciones</summary>
           <div class="row" style="margin-top:8px">
-            <label class="f">Foco (min)<input type="number" id="c-focus" min="5" max="90" value="40"></label>
-            <label class="f">Pausa corta (min)<input type="number" id="c-short" min="1" max="30" value="5"></label>
-            <label class="f">Pausa del bloque (min)<input type="number" id="c-long" min="1" max="45" value="10"></label>
+            <label class="f">Foco (min)<input type="number" id="c-focus" min="5" max="90" value="50"></label>
+            <label class="f">Pausa (min)<input type="number" id="c-short" min="1" max="30" value="10"></label>
+            <label class="f">Pausa larga (cada 4)<input type="number" id="c-long" min="1" max="45" value="20"></label>
           </div>
-          <div class="small muted" style="margin-top:6px">Un bloque son 2 pomodoros. Foco 40 + pausa 5, dos veces, son 90 minutos.</div>
+          <div class="small muted" style="margin-top:6px">Un bloque del plan (90 min) equivale a unos 80 min de foco. Los bloques del día se calculan con tus minutos de foco.</div>
         </details>
       </div>
 
@@ -188,6 +188,7 @@ table.t input[type=number]{width:70px;padding:3px 6px}
       <h2>Tutor</h2>
       <div class="small muted" id="tutor-ctx" style="margin-bottom:10px"></div>
       <div class="chips" id="chips"></div>
+      <div class="row" style="margin-bottom:10px"><span class="small muted">Longitud de las respuestas</span><div class="chips" id="lens" style="margin:0"></div></div>
       <div id="chat-empty" class="empty">Pregunta lo que estás revisando. Con "Consulta" te respondo directo. Las otras técnicas te hacen trabajar la respuesta.</div>
       <div class="msgs" id="msgs" aria-live="polite"></div>
       <div class="compose">
@@ -218,6 +219,7 @@ table.t input[type=number]{width:70px;padding:3px 6px}
       <div class="card"><h2>Últimos 14 días</h2><div class="bars" id="bars"></div><div class="row" style="gap:20px;margin-top:14px" id="totals"></div></div>
       <div class="card"><h2>Sesiones recientes</h2><div id="sessions"></div></div>
     </div>
+    <div class="card" style="margin-top:16px"><h2>Avance por tema</h2><div id="topics" style="display:grid;gap:12px"></div></div>
   </section>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -301,11 +303,12 @@ $('s-read').onchange=e=>{ sel.read=e.target.value; lsSet('cfa.sel',sel); renderT
 const readingById = id => READINGS.find(r=>r.id===id);
 
 /* ---------- cronómetro ---------- */
-const cfg = Object.assign({focus:40, short:5, long:10}, lsGet('cfa.cfg',{}));
-let T = Object.assign({phase:'focus', pomo:0, running:false, endAt:0, left:cfg.focus*60}, lsGet('cfa.timer',{}));
+const BLOCK_FOCUS=80;
+const cfg = Object.assign({focus:50, short:10, long:20}, lsGet('cfa.cfg2',{}));
+let T = Object.assign({phase:'focus', pomo:0, running:false, endAt:0, left:cfg.focus*60}, lsGet('cfa.timer2',{}));
 let audio=null, wake=null, tick=null;
 const phaseLen = p => (p==='focus'?cfg.focus:p==='short'?cfg.short:cfg.long)*60;
-function saveT(){ lsSet('cfa.timer',T); }
+function saveT(){ lsSet('cfa.timer2',T); }
 function beep(){ try{ audio=audio||new (window.AudioContext||window.webkitAudioContext)(); [0,0.25,0.5].forEach((t,i)=>{ const o=audio.createOscillator(), g=audio.createGain(); o.frequency.value=i===2?880:660; g.gain.value=0.15; o.connect(g); g.connect(audio.destination); o.start(audio.currentTime+t); o.stop(audio.currentTime+t+0.18); }); }catch(e){} try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){} }
 async function lock(on){ try{ if(on&&navigator.wakeLock){ wake=await navigator.wakeLock.request('screen'); } else if(wake){ await wake.release(); wake=null; } }catch(e){} }
 function leftNow(){ return T.running ? Math.max(0,Math.round((T.endAt-Date.now())/1000)) : T.left; }
@@ -317,7 +320,7 @@ function drawTimer(){
   const arc=$('arc'); arc.style.stroke = T.phase==='focus'?'var(--focus)':'var(--break)';
   arc.style.strokeDashoffset = String(282.74*(1-(tot?l/tot:0)));
   $('b-start').textContent = T.running?'Pausar':(l<tot&&l>0?'Continuar':'Iniciar');
-  $('dots').innerHTML=[0,1].map(i=>`<span class="dot ${i<T.pomo?'on':''}"></span>`).join('')+`<span class="small muted" style="margin-left:6px">Pomodoro ${Math.min(T.pomo+1,2)} de 2</span>`;
+  $('dots').innerHTML=[0,1,2,3].map(i=>`<span class="dot ${i<T.pomo?'on':''}"></span>`).join('')+`<span class="small muted" style="margin-left:6px">Pomodoro ${T.pomo+1} de 4</span>`;
   document.title = (T.running? pad(Math.floor(l/60))+':'+pad(l%60)+' · ' : '') + 'Panel de Estudio CFA';
 }
 function logFocus(minutes){
@@ -331,8 +334,8 @@ function finishPhase(manual){
     const done = manual ? (phaseLen('focus')-leftNow())/60 : cfg.focus;
     if(!manual || done>=1) { if(!manual) logFocus(done); }
     T.pomo += manual?0:1;
-    if(!manual){ if(T.pomo>=2){ T.phase='long'; T.pomo=0; toast('Bloque completo. Pausa larga.'); } else { T.phase='short'; toast('Pomodoro registrado. Pausa corta.'); } }
-    else { T.phase=T.pomo>=2?'long':'short'; }
+    if(!manual){ if(T.pomo>=4){ T.phase='long'; T.pomo=0; toast('Cuatro pomodoros. Pausa larga.'); } else { T.phase='short'; toast('Pomodoro registrado. Pausa corta.'); } }
+    else { T.phase=T.pomo>=4?'long':'short'; }
   } else { T.phase='focus'; }
   T.running=false; T.left=phaseLen(T.phase); T.endAt=0; saveT(); lock(false); drawTimer(); renderToday();
   if(!manual && !wasFocus) toast('Pausa terminada. Listo para el siguiente foco.');
@@ -344,10 +347,10 @@ $('b-start').onclick=()=>{
   saveT(); drawTimer();
 };
 $('b-skip').onclick=()=>{ if(T.phase==='focus'){ const mins=(phaseLen('focus')-leftNow())/60; if(mins>=5){ logFocus(mins); T.pomo++; toast('Registré '+Math.round(mins)+' min de foco'); } } else { /* saltar pausa */ }
-  const wasFocus=T.phase==='focus'; if(wasFocus){ T.phase=T.pomo>=2?'long':'short'; if(T.pomo>=2) T.pomo=0; } else T.phase='focus';
+  const wasFocus=T.phase==='focus'; if(wasFocus){ T.phase=T.pomo>=4?'long':'short'; if(T.pomo>=4) T.pomo=0; } else T.phase='focus';
   T.running=false; T.left=phaseLen(T.phase); T.endAt=0; saveT(); lock(false); drawTimer(); renderToday(); };
 $('b-reset').onclick=()=>{ T={phase:'focus',pomo:0,running:false,endAt:0,left:cfg.focus*60}; saveT(); lock(false); drawTimer(); };
-[['c-focus','focus'],['c-short','short'],['c-long','long']].forEach(([id,k])=>{ $(id).value=cfg[k]; $(id).onchange=e=>{ const v=Math.max(1,Math.min(90,Number(e.target.value)||cfg[k])); cfg[k]=v; e.target.value=v; lsSet('cfa.cfg',cfg); if(!T.running){ T.left=phaseLen(T.phase); saveT(); } drawTimer(); }; });
+[['c-focus','focus'],['c-short','short'],['c-long','long']].forEach(([id,k])=>{ $(id).value=cfg[k]; $(id).onchange=e=>{ const v=Math.max(1,Math.min(90,Number(e.target.value)||cfg[k])); cfg[k]=v; e.target.value=v; lsSet('cfa.cfg2',cfg); if(!T.running){ T.left=phaseLen(T.phase); saveT(); } drawTimer(); }; });
 // restaurar cronómetro tras recargar
 if(T.running){ if(T.endAt-Date.now() < -600000){ T={phase:'focus',pomo:0,running:false,endAt:0,left:cfg.focus*60}; saveT(); } }
 setInterval(loop,250);
@@ -355,10 +358,10 @@ setInterval(loop,250);
 /* ---------- hoy ---------- */
 function sessionsOn(ds){ return Object.values(data.sessions).filter(s=>s.date===ds); }
 function renderToday(){
-  const ds=today(), ss=sessionsOn(ds), pomos=ss.reduce((a,s)=>a+(s.pomo||0),0), min=ss.reduce((a,s)=>a+(s.minutes||0),0);
-  const plan=planBlocks(ds), done=Math.floor(pomos/2);
+  const ds=today(), ss=sessionsOn(ds), pomos=ss.reduce((a,s)=>a+(s.pomo||0),0), min=ss.reduce((a,s)=>a+((s.pomo||0)>0?(s.minutes||0):0),0);
+  const plan=planBlocks(ds), done=Math.round(min/BLOCK_FOCUS*10)/10;
   $('st-pomos').textContent=pomos; $('st-blocks').textContent=done+' / '+plan; $('st-min').textContent=Math.round(min);
-  const pct = plan? Math.min(100,pomos/(plan*2)*100):0;
+  const pct = plan? Math.min(100,min/(plan*BLOCK_FOCUS)*100):0;
   $('day-bar').className='bar'+(pct>=100?' ok':''); $('day-bar').firstElementChild.style.width=pct+'%';
   const di=dayIdx(ds), items=DAYPLAN[di]||[];
   $('plan').innerHTML = plan===0 ? '<li class="muted">Sin bloques planeados hoy.</li>' : items.map(([k,t])=>`<li><span class="k">${k}</span><span>${esc(t)}</span></li>`).join('');
@@ -375,15 +378,15 @@ function suggest(){
   const k=sel.kind;
   if(k==='L') return firstUnread? `Sigue: <b>Reading ${esc(firstUnread.n)} · ${esc(firstUnread.title)}</b> (${firstUnread.pages} págs, Book ${firstUnread.book} págs ${firstUnread.p0}–${firstUnread.p1}).` : `En ${esc(tema)} ya leíste todo. Pasa a resumir o a ejercicios.`;
   if(k==='R') return firstUnsumm? `Para resumir: <b>Reading ${esc(firstUnsumm.n)} · ${esc(firstUnsumm.title)}</b>.` : `En ${esc(tema)} no hay lecturas pendientes de resumir.`;
-  if(k==='Q') return `Ejercicios de ${esc(tema)}: vignettes de 4 preguntas. Anota cada error en el Excel (hoja Errores).`;
+  if(k==='Q') return `Ejercicios de ${esc(tema)}: vignettes de 4 preguntas.`;
   if(k==='V') return 'Repasa tus errores con más de 7 días y dedica 1 h a Ética.';
   return `Explica ${esc(tema)} como si fueras a enseñarlo y busca dónde te trabas (pestaña Tutor, técnica Feynman).`;
 }
 $('b-copyday').onclick=()=>{
-  const ds=today(), ss=sessionsOn(ds), pomos=ss.reduce((a,s)=>a+(s.pomo||0),0), d=data.days[ds]||{};
+  const ds=today(), ss=sessionsOn(ds), fmin=ss.reduce((a,s)=>a+((s.pomo||0)>0?(s.minutes||0):0),0), d=data.days[ds]||{};
   const tr=Number($('q-transport').value)||d.transport||0, qu=Number($('q-questions').value)||d.questions||0, ex=Number($('q-exercise').value)||d.exercise||0;
   put('days',ds,{transport:tr,questions:qu,exercise:ex});
-  copy(`${ds}\tBloques hechos: ${Math.floor(pomos/2)}\tMin transporte: ${tr}\tPreguntas CFA: ${qu}\tEjercicio (min): ${ex}`,'Resumen copiado');
+  copy(`${ds}\tBloques hechos: ${Math.round(fmin/BLOCK_FOCUS*10)/10}\tMin transporte: ${tr}\tPreguntas CFA: ${qu}\tEjercicio (min): ${ex}`,'Resumen copiado');
 };
 ['q-transport','q-questions','q-exercise'].forEach(id=>{ $(id).onchange=()=>{ const ds=today(); put('days',ds,{transport:Number($('q-transport').value)||0,questions:Number($('q-questions').value)||0,exercise:Number($('q-exercise').value)||0}); }; });
 $('b-manual').onclick=()=>{
@@ -406,6 +409,8 @@ const MODES = {
 };
 let mode = lsGet('cfa.mode','consulta'); if(!MODES[mode]) mode='consulta';
 let chat = lsGet('cfa.chat',[]);
+const LENS = {corta:{label:'Corta',txt:'Máximo unas 120 palabras. Ve directo al punto.'}, media:{label:'Media',txt:'Entre 200 y 350 palabras.'}, larga:{label:'Larga',txt:'Detallada y completa, entre 500 y 800 palabras, con ejemplos numéricos y el razonamiento paso a paso.'}};
+let len = lsGet('cfa.len','media'); if(!LENS[len]) len='media';
 let ctl=null, sampleFn=null, sampleChecked=false;
 function ctxText(){
   const r=readingById(sel.read), w=currentWeek(today());
@@ -417,8 +422,10 @@ function ctxText(){
   return s;
 }
 function instructions(){
-  return `Eres mi tutor de CFA Nivel 2 (examen de mayo de 2027, currículo 2027). Estudio con SchweserNotes 2025 y una BA II Plus. Soy analista de FP&A en una aseguradora de vida en Chile, ingeniero comercial (UC); en el Nivel 1 mi punto más débil fue Economía y el más fuerte Derivados. Respóndeme en español (Chile), usando los términos en inglés tal como aparecen en el currículo. Sé conciso: máximo unas 250 palabras salvo que pida más. Escribe las fórmulas en texto plano con variables claras (sin LaTeX). Si no estás seguro de un dato del currículo, dilo. ${ctxText()}\n\nModo: ${MODES[mode].label}. ${MODES[mode].rules}`;
+  return `Eres mi tutor de CFA Nivel 2 (examen de mayo de 2027, currículo 2027). Estudio con SchweserNotes 2025 y una BA II Plus. Soy analista de FP&A en una aseguradora de vida en Chile, ingeniero comercial (UC); en el Nivel 1 mi punto más débil fue Economía y el más fuerte Derivados. Respóndeme en español (Chile), usando los términos en inglés tal como aparecen en el currículo. Longitud de las respuestas: ${LENS[len].txt} Si te pido una respuesta más corta o más larga, ajústate. Escribe las fórmulas en texto plano con variables claras (sin LaTeX). Si no estás seguro de un dato del currículo, dilo. ${ctxText()}\n\nModo: ${MODES[mode].label}. ${MODES[mode].rules}`;
 }
+function renderLens(){ $('lens').innerHTML = Object.entries(LENS).map(([k,m])=>`<button class="chip" data-l="${k}" aria-pressed="${k===len}">${esc(m.label)}</button>`).join(''); }
+$('lens').onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; len=b.dataset.l; lsSet('cfa.len',len); renderLens(); };
 function renderTutorCtx(){ $('tutor-ctx').textContent = ctxText(); }
 function renderChips(){ $('chips').innerHTML = Object.entries(MODES).map(([k,m])=>`<button class="chip" data-m="${k}" aria-pressed="${k===mode}">${esc(m.label)}</button>`).join(''); }
 $('chips').onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; mode=b.dataset.m; lsSet('cfa.mode',mode); renderChips(); const t=MODES[mode].tpl; if(t && !$('in').value.trim()){ $('in').value=t; $('in').focus(); } $('chat-note').textContent='Técnica: '+MODES[mode].label; };
@@ -446,10 +453,10 @@ function md(src){
 }
 function renderChat(){
   $('chat-empty').hidden = chat.length>0;
-  $('msgs').innerHTML = chat.map((m,i)=> m.role==='user' ? `<div class="msg user">${esc(m.content)}</div>` : `<div class="msg assistant">${md(m.content)}<div style="margin-top:6px"><button class="btn small ghost" data-copy="${i}">Copiar</button></div></div>`).join('');
+  $('msgs').innerHTML = chat.map((m,i)=> m.role==='user' ? `<div class="msg user">${esc(m.content)}</div>` : `<div class="msg assistant">${md(m.content)}<div class="row" style="margin-top:6px"><button class="btn small ghost" data-copy="${i}">Copiar</button><button class="btn small ghost" data-q="Hazlo más corto, conservando lo esencial.">Más corto</button><button class="btn small ghost" data-q="Hazlo más largo y detallado, con un ejemplo numérico.">Más largo</button></div></div>`).join('');
   $('msgs').scrollTop=$('msgs').scrollHeight;
 }
-$('msgs').onclick=e=>{ const b=e.target.closest('[data-copy]'); if(b) copy(chat[Number(b.dataset.copy)].content,'Respuesta copiada'); };
+$('msgs').onclick=e=>{ const q=e.target.closest('[data-q]'); if(q){ if(!ctl){ $('in').value=q.dataset.q; send(); } return; } const b=e.target.closest('[data-copy]'); if(b) copy(chat[Number(b.dataset.copy)].content,'Respuesta copiada'); };
 function errCopy(c){ return ({not_granted:'Necesito tu permiso para consultar a Claude desde el panel. Recarga y acepta.',rate_limited:'Demasiadas consultas seguidas. Espera un momento.',upstream_error:'Claude no respondió. Intenta de nuevo.',cancelled:''})[c]||'No pude consultar a Claude ('+c+').'; }
 async function send(){
   const text=$('in').value.trim(); if(!text) return;
@@ -507,7 +514,12 @@ $('b-copytimes').onclick=()=>{
 };
 
 /* ---------- registro ---------- */
-function renderRegistro(){
+function renderTopics(){
+  $('topics').innerHTML = TEMAS.map(t=>{ const rs=READINGS.filter(r=>r.tema===t); if(!rs.length) return '';
+    const nr=rs.filter(r=>progOf(r).read).length, ns=rs.filter(r=>progOf(r).summ).length, a=nr/rs.length*100, b=ns/rs.length*100;
+    return `<div><div class="row sp"><b>${esc(t)}</b><span class="small muted">leídas ${nr}/${rs.length} · resumidas ${ns}/${rs.length}</span></div><div class="bar" style="margin-top:4px"><i style="width:${a}%"></i></div><div class="bar ok" style="margin-top:3px"><i style="width:${b}%"></i></div></div>`; }).join('');
+}
+function renderRegistro(){ renderTopics();
   const days=[]; for(let i=13;i>=0;i--){ const d=new Date(); d.setDate(d.getDate()-i); days.push(dstr(d)); }
   const vals=days.map(ds=>sessionsOn(ds).reduce((a,s)=>a+(s.pomo||0),0)), mx=Math.max(4,...vals);
   $('bars').innerHTML=days.map((ds,i)=>`<div title="${ds}: ${vals[i]} pomodoros"><i style="height:${vals[i]/mx*100}%"></i><small>${ds.slice(8)}</small></div>`).join('');
@@ -527,7 +539,7 @@ function showTab(name){
 }
 $('tabs').onclick=e=>{ const b=e.target.closest('.tab'); if(b) showTab(b.dataset.tab); };
 function renderAll(){ renderToday(); renderRegistro(); renderLecturas(); syncDayInputs(); }
-fillSelects(); renderChips(); renderTutorCtx(); renderChat(); drawTimer(); renderAll();
+fillSelects(); renderChips(); renderLens(); renderTutorCtx(); renderChat(); drawTimer(); renderAll();
 showTab(['hoy','tutor','lecturas','registro'].includes(location.hash.slice(1))?location.hash.slice(1):'hoy');
 window.addEventListener('hashchange',()=>{ const h=location.hash.slice(1); if(['hoy','tutor','lecturas','registro'].includes(h)) showTab(h); });
 </script>
