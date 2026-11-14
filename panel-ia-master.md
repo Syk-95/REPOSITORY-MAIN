@@ -138,7 +138,7 @@
 
 | Componente | Comportamiento |
 |---|---|
-| **Tarjeta de indicador (KPI)** | Número grande, etiqueta, variación o nota. Ejemplos (calcúlalos siempre desde los datos, no los escribas fijos): "Ítems en el catálogo: 56", "Nota A: 8", "Nota C o D: 22", "Contradicciones abiertas: las sin resolver de la sección 23.5", "Progreso de aprendizaje: 35%". |
+| **Tarjeta de indicador (KPI)** | Número grande, etiqueta, variación o nota. Ejemplos (calcúlalos siempre desde los datos, no los escribas fijos): "Ítems en el catálogo: 58", "Nota A: 9", "Nota C o D: 22", "Contradicciones abiertas: las sin resolver de la sección 23.5", "Progreso de aprendizaje: 35%". |
 | **Insignia de nota (A, B, B−, C, D)** | Pastilla con color y letra; al pasar el cursor muestra el motivo y recuerda "nivel README, no auditoría". |
 | **Chips de certeza** | ✔ ◐ ✗ ? con la fecha del dato. |
 | **Ficha de repositorio** | Nombre, enlace (con indicador de que abre fuera), dueño, licencia, estrellas con fecha, nota, nivel, riesgo de instalación (1-4), acción recomendada, resumen, nota de seguridad y fuente. |
@@ -206,7 +206,7 @@ Las secciones de la Parte D se citan por su número. Resumen:
 | Sección | Tema |
 |---|---|
 | 0 | Método y límites |
-| 2 | Conceptos explicados y "extraer, no instalar" (2.1) |
+| 2 | Conceptos explicados; "extraer, no instalar" (2.1); equivalente oficial de Anthropic a `skills add` (2.2) |
 | 3 | Publicadores oficiales |
 | 4 | Escala de notas de seguridad |
 | 5 | Agente orquestador: propio o existente |
@@ -238,7 +238,7 @@ Cada nivel agrupa contenido de **varias secciones**. Dentro de un nivel, ordena 
 |---|---|---|---|
 | **1** | **Fundamentos de IA** | 14.3 escalera niveles 1-3; 14.2 conceptos: ventana de contexto, tokens, inferencia, latencia; glosario | ¿Qué es un modelo, un token, un prompt? |
 | **2** | **Usar Claude y aprender** | 16 cursos gratuitos (Claude 101, AI Fluency); 20 iceberg niveles "Tip" y "Shallows"; 18 etapas 1-2 | ¿Cómo empiezo y qué aprendo primero? |
-| **3** | **Seguridad base** | 17.1-17.4 (claves de API, filtraciones, amenazas); 4 escala de notas; 2.1 "extraer, no instalar"; 13 límites | ¿Qué NO debo hacer jamás y cómo me protejo? |
+| **3** | **Seguridad base** | 17.1-17.4 (claves de API, filtraciones, amenazas); 4 escala de notas; 2.1 "extraer, no instalar"; 2.2 equivalente oficial de Anthropic a `skills add`; 13 límites | ¿Qué NO debo hacer jamás y cómo me protejo? |
 | **4** | **Skills, plugins y repos: elegir con criterio** | 3 publicadores oficiales; 7 oficiales; 8 los 18 repos; 9 segunda consulta; 11 páginas y servicios; 12 tabla maestra; 20 iceberg "Deep" (skills, hooks, plugins) | ¿Qué repos y skills uso y cuáles evito? |
 | **5** | **Conectar datos y herramientas** | 15 conectores y MCP; 14.2 RAG, contexto, caché semántica; 22.5 caché; 22.1 RAG; 22.6 Text-to-SQL | ¿Cómo le doy datos y herramientas a un modelo de forma segura? |
 | **6** | **Agentes y orquestación** | 5 orquestador propio o existente; 10 gestores de sesiones; 14.2 orquestación; 20 iceberg "Dark"; 22.4 autopilot de costos; 22.2 orquestación de agentes | ¿Cómo coordino varios agentes? |
@@ -333,7 +333,7 @@ Este documento ordena todo lo que me pasaste en capturas y mensajes: repositorio
 ## 1. Índice
 
 0. Cómo leer este documento (método y límites)
-2. Conceptos explicados (incluye "extraer, no instalar")
+2. Conceptos explicados (incluye "extraer, no instalar" y el equivalente oficial de Anthropic a `skills add`)
 3. Publicadores oficiales: qué cuenta y qué no
 4. Seguridad: escala de notas
 5. Agente orquestador: ¿propio o existente?
@@ -409,6 +409,54 @@ Socket lo explica así: copiar archivos de una skill a la carpeta de skills no e
 8. Prueba la primera vez en un entorno sin credenciales (contenedor o máquina virtual) y observa qué comandos intenta ejecutar.
 
 **Qué dicen los datos sobre el riesgo:** la auditoría "ToxicSkills" de Snyk revisó 3,984 skills de ClawHub y skills.sh. Los artículos que la resumen dan cifras distintas (13.4% con problemas críticos; 76 payloads maliciosos confirmados). No abrí el informe original, así que cita esas cifras con cautela.
+
+### 2.2 El equivalente oficial de Anthropic a `npx skills add`
+
+**Respuesta corta:** sí existe. En Claude Code se llama **plugins y marketplaces**. Hay además una forma manual (copiar la carpeta de la skill), que es justamente "extraer, no instalar". Todo esto está en la documentación oficial de Claude Code (leída el 2026-11-14).
+
+| Forma | Comando o acción | Qué hace | Cuánto ves antes de instalar |
+|---|---|---|---|
+| **Plugin desde un marketplace** | `/plugin install nombre@marketplace` dentro de una sesión | **No instala de inmediato**: abre el panel `/plugin` con los detalles del plugin para que lo revises y elijas el alcance (usuario, proyecto o solo local) | Alta: el panel muestra "Will install" (comandos, agentes, skills, hooks y servidores MCP o LSP) y, en el marketplace oficial, la fecha de última actualización y el costo en contexto |
+| **Plugin desde la terminal** | `claude plugin install nombre@marketplace` | Instala sin abrir una sesión (útil en scripts); alcance de usuario por defecto | Baja: no hay panel; revisa antes con `claude plugin details` |
+| **Agregar un marketplace** | `/plugin marketplace add owner/repo` o `claude plugin marketplace add owner/repo` | Registra un catálogo de plugins (repo de GitHub, URL de git, carpeta local o archivo `marketplace.json`); se puede fijar una versión con `#etiqueta` | El catálogo es solo una lista; el contenido se descarga al instalar |
+| **Agregar e instalar de una vez** | `/plugin install plugin --marketplace owner/repo` (v2.1.275 o posterior) o `claude plugin install plugin --marketplace owner/repo` (v2.1.292 o posterior) | Si el marketplace es nuevo, en la sesión pide confirmación; **en la terminal lo agrega sin confirmación** | Media |
+| **Skills de Anthropic** | `/plugin marketplace add anthropics/skills` y luego `/plugin install document-skills@anthropic-agent-skills` | Instala los paquetes de `anthropics/skills` | Alta (panel) |
+| **Manual (extraer)** | Copiar la carpeta de la skill (con su `SKILL.md`) a `~/.claude/skills/<nombre>/` (todos tus proyectos) o `.claude/skills/<nombre>/` (un proyecto) | No ejecuta ningún instalador; Claude detecta los cambios sin reiniciar | Total: tú lees todo antes de copiar |
+| **En claude.ai y API** | Subir una skill propia (planes de pago, según el README de `anthropics/skills`) o usar la API de Skills | Para usar skills fuera de Claude Code | — |
+
+**Marketplaces de Anthropic (verificados en la documentación y en GitHub):**
+
+| Marketplace | Nombre para instalar | Repo | Qué contiene | Revisión |
+|---|---|---|---|---|
+| **Oficial** | `claude-plugins-official` (Claude Code lo agrega solo la primera vez que abres una sesión interactiva) | `anthropics/claude-plugins-official` (Apache-2.0, 47.2k estrellas) | Plugins que mantiene Anthropic (carpeta `/plugins`), más plugins de socios y otros autores | Anthropic revisa cada carpeta propia en cada pull request; **no controla ni verifica** lo que incluyan los plugins de terceros ni que no cambien |
+| **Comunitario** | `claude-community` (hay que agregarlo con `/plugin marketplace add anthropics/claude-plugins-community`) | `anthropics/claude-plugins-community` (Apache-2.0, 4.9k estrellas; espejo de solo lectura) | Plugins de terceros enviados a Anthropic | Cada uno pasó un **escaneo de seguridad automático** y fue aprobado; el README no detalla revisión humana. La documentación indica que casi todas las entradas fijan un commit exacto y Claude Code **se niega a instalar otro commit** |
+| **Terceros** | El nombre que declare cada uno | Cualquier repo | Cualquier cosa | **Anthropic no los revisa** |
+
+Los nombres oficiales y comunitario solo se aceptan si el origen está en `github.com/anthropics/`, así que un tercero no puede hacerse pasar por Anthropic. La lista oficial de nombres incluye `claude-plugins-official`, `anthropic-agent-skills` y `agent-skills`, entre otros.
+
+**Cómo revisar un plugin antes de instalarlo (según Anthropic):**
+1. `claude plugin marketplace list` muestra de dónde viene cada marketplace.
+2. En `/plugin`, el panel "Will install" lista lo que añade el plugin. Muestra que existe un hook, **no lo que ejecuta**.
+3. Abre "View on GitHub" y lee `hooks/hooks.json`, `.mcp.json` y todo el contenido de `bin/`.
+4. Clona el repo y ejecuta `claude --plugin-dir <carpeta> plugin details <nombre>` para ver el "Component inventory" sin abrir una sesión.
+5. Después de instalar, `claude plugin details <nombre>` muestra el mismo inventario y el costo que añade a cada sesión.
+
+**Lo que puede hacer un plugin instalado (según Anthropic):** ejecutar hooks como comandos de shell, lanzar monitores en segundo plano, correr módulos JavaScript ("mods") con tus permisos, arrancar servidores MCP y LSP, añadir su carpeta `bin/` al PATH de la herramienta Bash, e inyectar skills y agentes como instrucciones. **El sandbox y las reglas de permisos no cubren el código que el plugin ejecuta por sí mismo** (hooks, monitores y servidores corren fuera del sandbox). Si el marketplace tiene actualización automática, **los archivos que revisaste pueden cambiar después**. Está activada por defecto en el marketplace oficial y en los agregados desde claude.ai, y **desactivada** en el comunitario y los de terceros.
+
+**Aviso oficial que muestra Claude Code antes de instalar:** "Asegúrate de confiar en un plugin antes de instalarlo, actualizarlo o usarlo. Anthropic no controla qué servidores MCP, archivos u otro software incluyen los plugins ni puede verificar que funcionen como se espera o que no vayan a cambiar."
+
+**Para quitar un plugin:** `claude plugin uninstall <plugin> --scope <alcance>`. Sus archivos quedan 14 días en `~/.claude/plugins/cache/`; bórralos tú si quieres eliminarlos antes.
+
+**`npx skills add` frente a `/plugin install`:**
+
+| | `npx skills add` (Vercel Labs) | `/plugin install` (Anthropic) |
+|---|---|---|
+| Quién lo hace | Herramienta de terceros (`vercel-labs/skills`) | Parte de Claude Code |
+| Alcance | Varios agentes (Claude Code, Codex, Cursor...) | Solo Claude Code (y Cowork) |
+| Qué muestra antes | Depende del repo | Panel con lo que se instalará y el alcance |
+| Riesgo común | Ambos descargan y activan código y texto de terceros; en ambos conviene leer antes | Igual |
+
+**Mi recomendación (criterio mío):** para aprender, usa la forma manual (copiar solo el `SKILL.md` leído) o `/plugin install` desde el marketplace **oficial** o `anthropics/skills`, mirando siempre el panel de detalles. Evita `claude plugin install ... --marketplace` desde la terminal con orígenes desconocidos, porque no pide confirmación.
 
 ---
 
@@ -924,9 +972,9 @@ Cada ficha tiene: enlace (✔ = lo abrí en GitHub), publicador, licencia, estre
 - **"iqjiy"**, el flujo "Google Omni" y la skill de "agshinrajabov": no encontré nada.
 - **Número de apps de ArtCraft:** tu captura dice trece; las fuentes, siete.
 - **La política de seguridad de Supabase, Google/skills y otros:** la página muestra el enlace, no su contenido.
-- **Cursos de Anthropic Academy:** no pude abrir el sitio; los nombres y el texto de los certificados vienen de búsquedas y blogs (sección 16).
+- **Cursos de Anthropic Academy:** la existencia del sitio está comprobada (redirección de `anthropic.com/learn` a `academy.claude.com`), pero no pude abrirlo; los nombres, la cantidad y el texto de los certificados vienen de búsquedas y blogs (sección 16).
 - **Reddit y docs.anthropic.com:** no accesibles; la documentación de claves de API de Anthropic no se pudo leer (sección 17).
-- **Los otros 19 proyectos de la guía de "27 proyectos"** del post de Instagram: no los conozco (sección 19).
+- **Alcance de los proyectos:** este archivo cubre solo los **8 proyectos escritos bajo el post de Instagram** (los que te interesan). La "guía de 27 proyectos" que el creador ofrece por mensaje directo es otra cosa, no estaba en tus capturas y no se incluye.
 - **El libro de Snowflake:** solo vi las páginas 28 y 30 a 35.
 
 ---
@@ -1065,12 +1113,24 @@ Empieza con **uno** y de solo lectura: tu documentación o tus notas. Evita en l
 
 ## 16. Cursos gratuitos de Anthropic y certificados
 
-**Fuente y límite:** no pude abrir `anthropic.skilljar.com` desde esta sesión (el dominio está fuera de la red permitida). Los nombres de los cursos vienen del resultado de búsqueda de esa página y de blogs; el número de cursos y el texto de los certificados **varían entre fuentes**. Verifícalo tú en el sitio oficial. Si quieres que lo lea yo, hay que permitir ese dominio en la configuración de red de la sesión.
+**¿Existe el sitio y cómo se accede? Sí, existe.** Comprobación directa: al abrir `https://www.anthropic.com/learn` (dominio oficial de Anthropic), el servidor respondió con una **redirección permanente (308) a `https://academy.claude.com/`**. Es decir, la entrada oficial es **anthropic.com/learn**, que te lleva a **academy.claude.com**. Una fuente secundaria dice que la plataforma se llama ahora **Claude Academy** (antes Anthropic Academy); otras fuentes siguen llamándola Anthropic Academy y la ubican en `anthropic.skilljar.com` (Skilljar es el servicio que aloja los cursos).
+
+**Cómo acceder:**
+1. Escribe tú mismo `anthropic.com/learn` en el navegador (no uses enlaces de redes sociales ni de mensajes directos).
+2. Te redirige a `academy.claude.com`.
+3. Regístrate con un correo (según las fuentes secundarias, no se pide más).
+4. Elige un curso y complétalo; al terminar aparece el certificado o la insignia, con opción de compartirlo.
+5. Algunos ejercicios prácticos (por ejemplo los de Claude Code) pueden requerir una cuenta de pago de Claude o una clave de API (según fuentes secundarias). **No pegues tu clave de API en el chat de ningún curso ni formulario** (sección 17).
+
+**Cuidado con falsificaciones:** si una página dice ser "cursos de Anthropic" pero te pide pagar, tu tarjeta o tu clave de API, desconfía. Según las fuentes, los cursos son gratuitos; sí existe un examen supervisado de pago (por ejemplo "Claude Certified Architect"), pero es aparte.
+
+**Límite de la verificación:** no pude abrir `academy.claude.com` ni `anthropic.skilljar.com` desde esta sesión (están fuera de la red permitida). La existencia del sitio la comprobé por la redirección desde anthropic.com. Los nombres de cursos, el número y el texto de los certificados vienen de búsquedas y blogs, y **varían entre fuentes**. Verifícalo tú en el sitio.
 
 **Qué se sabe (fuentes secundarias, coinciden en lo esencial):**
-- **Anthropic Academy** corre en Skilljar (`anthropic.skilljar.com`; también se llega desde `anthropic.com/learn`). Es **gratuito** y para registrarte basta un correo.
-- **Cantidad:** 13, 14, 15, 17, 18, 20 o 22 cursos según el artículo y la fecha.
-- **Certificado:** al completar un curso se obtiene un certificado que se puede compartir en LinkedIn ("Add to LinkedIn" de Skilljar, según una fuente). **Una reseña advierte que el certificado "certifica asistencia"**: confirma que completaste el curso, no que dominas la materia. Algunos cursos podrían mostrar solo una insignia; revisa la ficha de cada uno.
+- **Anthropic Academy / Claude Academy** corre en Skilljar y se entra por `anthropic.com/learn`. Es **gratuito** y para registrarte basta un correo.
+- **Fecha de lanzamiento:** las fuentes lo ubican en marzo de 2026 (secundarias).
+- **Cantidad:** 13 al lanzamiento y hasta 28 más adelante, según el artículo y la fecha (13, 14, 15, 17, 18, 20, 22, 26, 27 o 28). Una fuente habla de seis rutas temáticas.
+- **Certificado:** al completar un curso se obtiene un certificado que se puede compartir en LinkedIn ("Add to LinkedIn" de Skilljar, según una fuente). **Una reseña advierte que el certificado "certifica asistencia"**: confirma que completaste el curso, no que dominas la materia. Otra fuente aclara que lo habitual es una **insignia de finalización**, que **no es una certificación acreditada**. Revisa la ficha de cada curso.
 
 **Cursos que aparecen en el catálogo oficial según la búsqueda:**
 
@@ -1183,13 +1243,13 @@ Es mi propuesta de orden; ajústala a tu tiempo.
 
 ## 19. Proyectos de IA "valorados" para el portafolio (post de Instagram)
 
-**Fuente:** 4 capturas de un reel de Instagram titulado *"Actually good AI Engineering Projects for your resume"* (cuenta que aparece como `bashi_fuirkashi`, con insignia de verificado; publicado "hace 1 día" respecto de tu captura). Es la opinión de un creador de contenido, **no una fuente verificada**. El post termina con: *"Comenta 'GOOD' y te envío por DM mi guía completa de 27 proyectos"*. **Solo se ven 8 de los 27 proyectos** en tus capturas; los otros 19 no los conozco.
+**Fuente:** 4 capturas de un reel de Instagram titulado *"Actually good AI Engineering Projects for your resume"* (cuenta que aparece como `bashi_fuirkashi`, con insignia de verificado; publicado "hace 1 día" respecto de tu captura). Es la opinión de un creador de contenido, **no una fuente verificada**. El post termina con: *"Comenta 'GOOD' y te envío por DM mi guía completa de 27 proyectos"*. El post enumera **8 proyectos** bajo el video; esos son los que cubre este archivo. En la última línea del texto, el creador ofrece enviar por mensaje directo una guía aparte con 27 proyectos; esa guía no estaba en tus capturas y no se incluye.
 
 **La explicación detallada de cada proyecto está en la sección 22 y las opiniones de creadores en la sección 21.**
 
 **Sobre el gancho del post:** pedir que comentes una palabra para enviarte un DM es una técnica de captación de contactos. No es peligroso en sí mismo, pero desconfía de enlaces y archivos que lleguen por ese DM (phishing) y no entregues datos personales ni claves para recibir la guía.
 
-### 19.1 Los 8 proyectos visibles
+### 19.1 Los 8 proyectos del post
 
 La columna "Qué construyes" es lo que dice el post. "Qué aprendes" y "Cuidado" son mi explicación.
 
@@ -1319,7 +1379,7 @@ Marcas: ✔ = confirmado en la documentación oficial.
 | 7 | `aitechorigin` | "These 6 GitHub repositories are getting massive attention" (post 2 de 8 y siguientes) | **REA** (275,523 estrellas, "+239,477 esta semana", MIT, `npx rea-agents setup`) y **openGym** (12,465 estrellas, "+4,471 esta semana", AGPL-3.0, `docker compose up`). | Crecimiento semanal de estrellas como señal de interés. | ✔ Ambos repos existen. ✗/◐ REA: el crecimiento de estrellas es extraordinario y no pude contrastarlo con el historial (sección 23.5). openGym: ✔ activo, sin telemetría según su README. |
 | 8 | `aitechorigin` | "Some of the most useful tools on GitHub are hiding in plain sight" (posts 2 y 7 de 10) | **IFixAi** (auditoría de agentes de IA; 17.1k estrellas) y **Paperclip** (plano de control para agentes; 95,133 estrellas; versión v2026.016.1 del 21-sep-2026). | Auditar agentes con jueces independientes; coordinar agentes con objetivos, aprobaciones y presupuestos. | ✔ Ambos existen (IFixAi: Apache-2.0; Paperclip: MIT). ◐ "Independiente" y "Michelin Guide" son afirmaciones del propio proyecto. |
 | 9 | `duckstreak` | "Claude Code terms, beginner to expert: the iceberg" | Aprender **30 términos de Claude Code**, en 5 niveles de profundidad (Tip, Shallows, Deep, Dark, Abyss). | Lista de términos por nivel. | ✔ Los 30 términos tienen respaldo en la documentación oficial (sección 20). "Your own MCP server" es una práctica (escribir un servidor MCP propio) y no una página propia. |
-| 10 | `bashi_fuirkashi` | "Actually good AI Engineering Projects for your resume" | **8 proyectos visibles** de una guía de 27 (comenta "GOOD" para recibirla por DM). | Cada proyecto con su stack. | ✔ Las herramientas existen y están activas (sección 23.3). ◐ Los otros 19 proyectos no los conozco. |
+| 10 | `bashi_fuirkashi` | "Actually good AI Engineering Projects for your resume" | **8 proyectos**, escritos bajo el video. (El creador además ofrece por mensaje directo una guía aparte con 27; no se incluye.) | Cada proyecto con su stack. | ✔ Las herramientas existen y están activas (sección 23.3). |
 
 ### 21.2 Repos recomendados por más de un creador
 
@@ -1651,7 +1711,7 @@ Contrasté la información desde **seis ángulos**. Ninguno por sí solo prueba 
 **Límites reales de esta validación (para que no los pases por alto):**
 - **No audité código** de ningún repo. Una verificación de registros y de actividad no es un análisis de seguridad.
 - **No pude usar la API de GitHub** (acceso restringido en esta sesión) ni sitios que miden estrellas (`ossinsight.io`, `repos.ecosyste.ms`, bloqueados). Por eso **no pude revisar el historial de estrellas ni la fecha de creación** de los repos.
-- **No pude leer** `anthropic.skilljar.com` (cursos), `docs.anthropic.com` (claves de API) ni Reddit.
+- **No pude leer** `academy.claude.com` ni `anthropic.skilljar.com` (cursos), `docs.anthropic.com` (claves de API) ni Reddit.
 - Las fechas de último commit salen del feed público (`commits/main.atom`), que muestra los 20 commits más recientes; no dice nada de la historia anterior.
 - Lo validado es del **2026-11-14**.
 
@@ -1675,6 +1735,9 @@ Todas leídas en `code.claude.com/docs`. Consistencia adicional: la versión má
 | Los equipos de agentes son experimentales y vienen desactivados | ✔ | agent-teams |
 | Los workflows dinámicos tienen un tope de 1,000 agentes por ejecución y 16 simultáneos por defecto | ✔ | workflows |
 | El modo de permisos inicial por defecto en sesiones interactivas es el automático | ✔ | security |
+| `/plugin install` abre un panel de detalles antes de instalar; `claude plugin install` instala sin panel; la forma `--marketplace` desde la terminal agrega un marketplace nuevo sin confirmación | ✔ | plugins/install |
+| Los nombres de marketplace oficial y comunitario solo se aceptan desde `github.com/anthropics/`; el comunitario fija casi todos los plugins a un commit exacto | ✔ | plugins/security |
+| Un plugin instalado ejecuta código con tus permisos y el sandbox no cubre hooks, monitores ni servidores | ✔ | plugins/security |
 | Los canales son "research preview" y cualquiera que pueda responder puede aprobar usos de herramientas si el canal lo permite | ✔ | channels |
 
 ### 23.3 Ángulo B: verificación en registros de paquetes (npm y PyPI)
@@ -1775,6 +1838,9 @@ Revisé mis propias afirmaciones y corregí lo siguiente (ya aplicado en este ar
 9. **ayghri/i-have-adhd:** agregué que su último commit es de hace más de un mes y que hay commits de un autor sin nombre.
 10. **OpenMontage:** agregué que una empresa externa (Pika) aporta integraciones.
 11. **Proyectos de Instagram:** en la sección 19 había una columna con motivos; la dejo solo como referencia y la explicación real está en la sección 22.
+12. **"8 de 27 proyectos":** mi redacción anterior daba a entender que había 27 proyectos en tus capturas. No es así: el post enumera 8 y menciona una guía de 27 que se ofrece por mensaje directo. Corregido en las secciones 13, 19 y 21.
+13. **Cursos:** había escrito que el sitio no se podía confirmar; ahora está comprobado que existe (redirección desde anthropic.com/learn) y se explica cómo acceder (sección 16).
+14. **Equivalente a `skills add`:** agregué la sección 2.2 con los comandos oficiales de plugins y marketplaces, validados contra la documentación y las páginas de GitHub de Anthropic.
 
 ### 23.7 Ángulo F: cuánto pesa cada tipo de fuente
 
@@ -1794,7 +1860,10 @@ Revisé mis propias afirmaciones y corregí lo siguiente (ya aplicado en este ar
 | `google/skills` es oficial de Google | ✔ | Org `google`, bot de sincronización interna de Google en los commits; blog de Google Cloud (por búsqueda) |
 | Superpowers lo escribe Jesse Vincent, no Anthropic | ✔ | Dueño `obra`; commits de `obra` |
 | El libro de Snowflake existe, es de David Baum (Wiley, © 2024, 52 páginas) y es público en el sitio de Snowflake | ◐ | Resultados de búsqueda; no abrí el PDF |
-| Anthropic Academy es gratuita y da certificado | ◐ | Solo fuentes secundarias; sitio no accesible |
+| Existe un sitio oficial de cursos | ✔ | `anthropic.com/learn` responde con redirección 308 a `academy.claude.com` (observado directamente) |
+| Los cursos son gratuitos y dan certificado | ◐ | Solo fuentes secundarias; no pude abrir el sitio; el certificado es una insignia de finalización, no una acreditación |
+| `anthropics/claude-plugins-official` y `claude-plugins-community` son repos oficiales de Anthropic | ✔ | Páginas de GitHub (Apache-2.0; 47.2k y 4.9k estrellas) y documentación de Claude Code, coherentes entre sí |
+| El marketplace comunitario pasó escaneo automático | ◐ | Lo afirma su propio README; no describe revisión humana |
 | "Playwright MCP no es un límite de seguridad" | ✔ | README del repo |
 | El demo de computer use exige contenedor o VM | ✔ | README del demo |
 | Ponytail ahorra "54% de código" | ? | Autoinformado; una incidencia cuestiona la comparación |
@@ -3075,6 +3144,48 @@ Revisé mis propias afirmaciones y corregí lo siguiente (ya aplicado en este ar
   "certeza": "◐",
   "nota_seg": "Lo ejecuta /brag con npx; de HeyGen",
   "seccion": 9
+ },
+ {
+  "id": "plugins-official",
+  "nombre": "anthropics/claude-plugins-official",
+  "url": "https://github.com/anthropics/claude-plugins-official",
+  "cat": "plugin",
+  "dueno": "anthropics",
+  "tipo": "oficial",
+  "lic": "Apache-2.0",
+  "est": "47.2k",
+  "nota": "A",
+  "riesgo": 2,
+  "nivel": 4,
+  "accion": "usar-tras-extraer",
+  "ultimo_commit": null,
+  "verif": [
+   "pag"
+  ],
+  "certeza": "✔",
+  "nota_seg": "Marketplace oficial; Anthropic revisa sus propias carpetas, no controla los plugins de terceros",
+  "seccion": 2
+ },
+ {
+  "id": "plugins-community",
+  "nombre": "anthropics/claude-plugins-community",
+  "url": "https://github.com/anthropics/claude-plugins-community",
+  "cat": "plugin",
+  "dueno": "anthropics",
+  "tipo": "oficial",
+  "lic": "Apache-2.0",
+  "est": "4.9k",
+  "nota": "B",
+  "riesgo": 3,
+  "nivel": 4,
+  "accion": "estudiar",
+  "ultimo_commit": null,
+  "verif": [
+   "pag"
+  ],
+  "certeza": "◐",
+  "nota_seg": "Espejo de solo lectura de plugins de terceros con escaneo automático; revisión humana no descrita",
+  "seccion": 2
  }
 ]
 ```
