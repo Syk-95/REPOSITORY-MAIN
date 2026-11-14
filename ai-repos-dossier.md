@@ -36,7 +36,14 @@ Este documento ordena todo lo que me pasaste en capturas y mensajes: repositorio
 11. Catálogo E: páginas, servicios y funciones (sin repositorio)
 12. Tabla maestra de seguridad
 13. Lo que no pude verificar o resolver
-14. Fuentes
+14. Conceptos de IA de básico a avanzado (libro de Snowflake)
+15. Conectores y MCP en Claude Code
+16. Cursos gratuitos de Anthropic y certificados
+17. Seguridad al ir rápido (API keys, repos, agentes)
+18. Ruta de aprendizaje sugerida
+19. Proyectos de IA valorados para el portafolio (post de Instagram)
+20. El iceberg de Claude Code: 30 términos
+21. Fuentes
 
 ---
 
@@ -108,7 +115,7 @@ Tú mencionaste "los oficiales de Anthropic, Google y Superpowers". Esto es lo q
 | **OpenAI** | [openai/openai-agents-python](https://github.com/openai/openai-agents-python) | ✔ Oficial. MIT. Compatible con otros modelos. |
 | **AWS Labs** | [awslabs/cli-agent-orchestrator](https://github.com/awslabs/cli-agent-orchestrator) | ✔ Org `awslabs` (laboratorio de AWS, no un servicio comercial soportado). Apache-2.0. |
 | **LangChain** | [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) | ✔ Empresa conocida. MIT. |
-| **"Superpowers"** | [obra/superpowers](https://github.com/obra/superpowers) | ✔ **No es de Anthropic ni de Google.** Es de Jesse Vincent (usuario `obra`, con su empresa Prime Radiant). MIT. 317.2k ⭐. Su README lista el marketplace oficial de Claude Code entre las vías de instalación; eso significa que aparece en un catálogo, **no** que Anthropic sea el autor. |
+| **"Superpowers"** | [obra/superpowers](https://github.com/obra/superpowers) | ✔ **No es de Anthropic ni de Google.** Es de Jesse Vincent (usuario `obra`, con su empresa Prime Radiant). MIT. 317.2k ⭐. Su README lista el marketplace oficial de Claude Code entre las vías de instalación; eso significa que aparece en un catálogo, **no** que Anthropic sea el autor. La documentación de Claude Code aclara que la mayor parte de lo que lista el marketplace oficial viene de socios y otros autores, no de Anthropic. |
 
 **Regla práctica:** "oficial" te dice **quién es el dueño**, no que no haya riesgos. Un repo oficial sigue pudiendo traer scripts, y todo lo que se ejecuta con tus permisos merece lectura. Pero un dueño identificable, con empresa detrás y política de seguridad, baja mucho la probabilidad de un ataque deliberado.
 
@@ -603,10 +610,381 @@ Cada ficha tiene: enlace (✔ = lo abrí en GitHub), publicador, licencia, estre
 - **"iqjiy"**, el flujo "Google Omni" y la skill de "agshinrajabov": no encontré nada.
 - **Número de apps de ArtCraft:** tu captura dice trece; las fuentes, siete.
 - **La política de seguridad de Supabase, Google/skills y otros:** la página muestra el enlace, no su contenido.
+- **Cursos de Anthropic Academy:** no pude abrir el sitio; los nombres y el texto de los certificados vienen de búsquedas y blogs (sección 16).
+- **Reddit y docs.anthropic.com:** no accesibles; la documentación de claves de API de Anthropic no se pudo leer (sección 17).
+- **Los otros 19 proyectos de la guía de "27 proyectos"** del post de Instagram: no los conozco (sección 19).
+- **El libro de Snowflake:** solo vi las páginas 28 y 30 a 35.
 
 ---
 
-## 14. Fuentes
+## 14. Conceptos de IA, de lo básico a lo avanzado (con el libro de Snowflake)
+
+### 14.1 De dónde sale esto
+
+- **Fuente:** tus capturas del libro *Generative AI and LLMs For Dummies, Snowflake Special Edition* (John Wiley & Sons, © 2024): la página 28 (final del Capítulo 3, con la Figura 3-2) y las páginas 30 a 35 del **Capítulo 4, "Bringing LLM Apps into Production"**. La página 28 trae el índice del capítulo 4: caché semántica, feature injection y context retrieval; inferencia; interfaces amigables; orquestación de agentes.
+- **Sesgo a tener en cuenta:** es una edición especial **patrocinada por Snowflake**, una empresa de plataformas de datos. Sus recomendaciones ("una plataforma de datos completa", "mantener el procesamiento cerca de los datos") favorecen su tipo de producto. Úsalo como material de aprendizaje, no como consejo neutral.
+- **Dato desactualizado:** el libro dice que la ventana de contexto "típicamente solo contiene unos pocos miles de tokens". Eso era cierto en parte en 2023-2024; hoy los modelos aceptan mucho más texto. Verifica la cifra vigente en la documentación del modelo que uses. (Esto último es mi conocimiento general, no algo que leí en una fuente hoy.)
+- **Los proyectos "valorados"** no vienen del libro: son de un post de Instagram que enviaste después (sección 19). El "glaciar" de conceptos no es del libro, es el iceberg de términos de Claude Code (sección 20).
+
+### 14.2 Los conceptos del libro, explicados
+
+La columna "Lo que dice el libro" resume las capturas. Las columnas "En simple" y "Cuidado" son mi explicación.
+
+| Concepto | Lo que dice el libro | En simple | Cuidado / conexión con tu seguridad |
+|---|---|---|---|
+| **Cloud data platform** (Cap. 3, Fig. 3-2) | Una plataforma de datos en la nube reúne el trabajo de analistas, científicos e ingenieros de datos. Los proveedores ofrecen herramientas para construir apps de IA generativa (chatbots, buscadores) y para cargar y consultar documentos (contratos, facturas, arriendos) usando el motor de razonamiento del LLM. Si incluye un **marketplace**, puedes usar apps de otros usuarios y empaquetar y distribuir tus propios modelos. La Figura 3-2 muestra capas: *Cross-Cloud & Global* → *Cloud Services* (rendimiento, gestión, alta disponibilidad, seguridad y gobierno, metadatos, compartir y colaborar) → *Elastic Multicluster Compute* (Python, SQL, Java, Scala) → *Optimized Storage* (datos no estructurados, semiestructurados y estructurados). | Un lugar único donde viven tus datos y se ejecutan los modelos, con seguridad y permisos integrados. | Es texto comercial de Snowflake. **Un marketplace de apps de terceros tiene el mismo problema de confianza que un marketplace de plugins** (sección 3 y 20): lo publica un tercero y corre con tus datos. |
+| **Semantic caching** (caché semántica) | Guardar temporalmente representaciones semánticas (embeddings) de los datos. Un chatbot puede precalcular las de muchas consultas posibles y recuperarlas de la caché en vez de procesar desde cero; reduce el cómputo y acelera la respuesta. | Recordar el resultado de preguntas con el mismo significado aunque estén escritas distinto, para no volver a pagar el cálculo. | Si la caché no separa usuarios o permisos, podría devolver a una persona algo que era de otra. No guardes datos sensibles en caché sin controles. |
+| **Feature injection** | Incorporar información o características adicionales al modelo para mejorar su rendimiento y razonamiento ("inyectar features relevantes" a un prompt). | Darle al modelo, en el momento de la consulta, los datos extra que importan para esa tarea. | Es un término poco estándar y su definición es amplia. **Todo lo que inyectas es una puerta de entrada para prompt injection** si viene de fuentes no confiables. |
+| **Context retrieval** (recuperación de contexto) | Traer el contexto relevante (interacciones previas, historial del usuario) para respuestas más precisas y personalizadas. Ejemplo: un soporte que recupera el número de pedido que el cliente mencionó antes. | La "memoria de corto plazo" que se le entrega al modelo. | El historial puede contener datos personales; decide qué se guarda y por cuánto tiempo. |
+| **RAG** (retrieval-augmented generation) | Conectar el LLM a fuentes externas para darle información actual (noticias, investigación). Los textos largos no caben en la ventana de contexto, así que se dividen en trozos (chunks). Paquetes como LangChain lo automatizan. | Antes de responder, el sistema busca los fragmentos relevantes en tus documentos y se los pasa al modelo. | Los documentos buscados son contenido no confiable. Un PDF o una página con texto malicioso puede intentar darle órdenes al modelo. |
+| **ICL** (in-context learning) | El libro menciona que RAG es un tipo de aprendizaje en contexto. | El modelo "aprende" de ejemplos o información dentro del prompt, sin reentrenarse. | Lo aprendido dura solo mientras esa información esté en el contexto. |
+| **Ventana de contexto y chunks** | Cada trozo debe caber en la ventana de contexto; los trozos se encadenan. | La ventana es cuánto texto puede "tener a la vista" el modelo a la vez. Un token es un fragmento de palabra. | Más texto en contexto = más costo y más superficie para inyección. |
+| **Processing for inference** (inferencia) | Ejecutar los cálculos para aplicar un modelo ya entrenado a datos nuevos y generar predicciones. Tres consideraciones: **Infraestructura** (las GPU manejan cómputo en paralelo; la elección depende del tamaño del modelo, memoria y latencia), **Acceso** (modelo en servidores propios o en la nube; la nube da escalabilidad pero plantea seguridad y gobierno de datos) y **Consumo** (por APIs y funciones, o por interfaces propias de la aplicación). | Inferencia = usar el modelo; entrenar es construirlo. | **Acceso en la nube significa que tus datos viajan a un tercero.** Revisa qué retiene y si entrena con ellos antes de enviar información sensible. |
+| **Reducing latency** (reducir la latencia) | Latencia = tiempo que tarda el LLM en predecir tras recibir la entrada. Es crítica en chatbots de soporte. El libro recomienda mantener el procesamiento cerca de los datos. | Cuánto esperas la respuesta. | Acelerar con cachés o atajos puede sacrificar frescura o seguridad. |
+| **Tipos de interfaz** | Chat (conversar), apps de escritorio (mucho cómputo o recursos locales) y CLI (para desarrolladores, por ejemplo para generar código). | Claude Code es una CLI; Claude.ai es chat. | Las CLI y apps de escritorio con acceso local pueden tocar tus archivos: ahí importan los permisos. |
+| **Simplifying development and deployment** | Una plataforma completa debería ofrecer cuatro capacidades: alto rendimiento, escalabilidad, **seguridad integral** (procesar datos sensibles según políticas empresariales) y facilidad de uso. | Lista de verificación para elegir dónde construir. | Sesgo: lo escribe un proveedor de plataforma. |
+| **LLMOps** | Herramientas nuevas que emergen bajo ese paraguas ("operaciones de LLM"). | Lo que MLOps es al aprendizaje automático, pero para modelos de lenguaje. | — |
+| **Orchestration** (orquestación) | Coordinar agentes y otros componentes para lograr objetivos. El libro define los agentes de IA como "instancias individuales de modelos de lenguaje responsables de tareas específicas" (resumir, traducir, analizar sentimiento) y la orquestación como organizar agentes, coordinar entradas y salidas y gestionar el flujo de datos. Ejemplo e-commerce: consultar el pedido en una base de datos, generar una etiqueta de devolución con la API de un transportista, confirmar datos del cliente e iniciar la devolución. | El director de orquesta que reparte tareas y junta resultados. | La definición de "agente" del libro es más simple que la de hoy (un agente actual usa herramientas y se repite en un bucle hasta terminar). |
+| **Orchestration library** (Figura 4-1) | El diagrama muestra: Aplicación de usuario ⇄ **Librería de orquestación** ⇄ LLM, y la librería conecta además con fuentes de datos externas (documentos, base de datos, web) y aplicaciones externas. Sirve para que los datos fluyan sin fricción. | La capa intermedia que conecta la app, el modelo y todo lo demás. | **Cada flecha del diagrama es una entrada posible para datos no confiables y una salida posible para tus datos.** Es el mismo mapa de riesgos de la sección 17. |
+| **Para qué sirven las librerías de orquestación** | Tres usos: (1) **encadenar prompts** para crear aplicaciones más complejas, (2) **conectar a fuentes de datos** (bases de datos, APIs, archivos), (3) **escalar a varios LLM**, que puede ser más difícil de mantener pero permite usar modelos especializados por tarea. | Es lo que hacen LangChain, LangGraph y similares. | Más modelos y más conexiones = más piezas que mantener y asegurar. Esto respalda mi recomendación de la sección 5: empezar simple. |
+
+**Conexión con el resto del dossier:** la Figura 4-1 del libro es el tipo 2 de orquestador de la sección 5 (frameworks que programas tú). Los gestores de sesiones de Claude Code (tipo 1) son otra cosa: coordinan *agentes completos de código*, no solo llamadas a un modelo.
+
+### 14.3 Escalera de conceptos (mi organización, de menos a más complejo)
+
+Esto es mi propia ordenación didáctica con conocimiento general; no es una lista del libro.
+
+1. **Fundamentos:** inteligencia artificial, aprendizaje automático, modelo de lenguaje (LLM), token, prompt, alucinación (respuestas inventadas con seguridad).
+2. **Usar un modelo:** inferencia, latencia, API, costo por token, ventana de contexto, temperatura.
+3. **Darle información:** contexto, embeddings (números que representan significado), base de datos vectorial, chunking, RAG, caché semántica.
+4. **Darle manos:** uso de herramientas (tool use / function calling), conectores y MCP, permisos.
+5. **Agentes:** bucle del agente (pensar, usar herramienta, observar, repetir), subagentes, skills, hooks.
+6. **Orquestación:** varios agentes o sesiones, aislamiento (worktrees, contenedores), presupuestos y aprobaciones, carriles de navegador.
+7. **Operar y proteger:** LLMOps, evaluaciones (evals), guardrails, observabilidad, prompt injection, gestión de secretos, sandbox.
+
+---
+
+## 15. Conectores y MCP en Claude Code
+
+**Fuente:** documentación oficial de Claude Code (code.claude.com/docs/en/mcp) leída el 2026-11-14, más el artículo de ayuda de Anthropic sobre conectores (por búsqueda). Donde diga "según fuentes secundarias" no lo verifiqué en la documentación oficial.
+
+### 15.1 Qué es cada cosa
+
+- **MCP (Model Context Protocol):** el estándar con el que Claude Code se conecta a herramientas, bases de datos y APIs externas. Cuando conectas un servidor, Claude puede leer y actuar en ese sistema directamente, en vez de que tú copies datos al chat.
+- **Servidor MCP:** el programa que ofrece las herramientas.
+- **Conector:** el nombre de producto de Anthropic para una integración empaquetada que ves en un directorio (Gmail, Google Drive, Google Calendar, GitHub, Slack, Microsoft 365, etc., según fuentes secundarias). Un conector es la "cara" y un servidor MCP es lo que hay detrás.
+- **Directorio de Anthropic (claude.ai/directory):** conectores revisados por Anthropic frente a sus criterios de listado. La propia documentación aclara que **Anthropic no hace auditoría de seguridad ni administra ningún servidor MCP.**
+- **Conectores personalizados (custom connectors):** apuntas a cualquier servidor MCP por su URL. Anthropic no los verifica (según fuentes secundarias).
+
+### 15.2 Tipos de conexión (transports)
+
+| Tipo | Estado | Úsalo para |
+|---|---|---|
+| `http` | Recomendado | Servicios remotos en la nube; soporta OAuth |
+| `sse` | **Obsoleto** | Solo servicios que únicamente ofrecen SSE |
+| `stdio` | Soportado | Procesos locales y scripts propios; **ejecuta un programa en tu computador** |
+| `ws` | Soportado | Servidores remotos que envían eventos; solo por JSON |
+
+### 15.3 Comandos básicos (de la documentación oficial)
+
+```bash
+# Servidor remoto por HTTP (recomendado)
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+
+# Servidor local (stdio): lo que va después de -- se ejecuta tal cual en tu equipo
+claude mcp add --transport stdio airtable -- npx -y airtable-mcp-server
+
+claude mcp list              # estado de cada servidor
+claude mcp get notion        # detalle de uno
+claude mcp login sentry      # flujo OAuth desde la terminal
+claude mcp logout sentry     # borra credenciales
+claude mcp remove notion     # elimina (OJO: no revoca el token)
+```
+
+Dentro de una sesión, `/mcp` muestra el estado y gestiona autenticación y activación.
+
+### 15.4 Alcances (scopes): dónde queda guardado
+
+| Alcance | Se carga en | Se comparte con el equipo | Se guarda en |
+|---|---|---|---|
+| **Local** (por defecto) | Solo el proyecto actual | No | `~/.claude.json` |
+| **Project** | Solo el proyecto actual | Sí, por control de versiones | `.mcp.json` en la raíz |
+| **User** | Todos tus proyectos | No | `~/.claude.json` |
+
+Orden de precedencia cuando un servidor está definido en varios lugares: local, proyecto, usuario, plugins y, al final, los conectores de claude.ai.
+
+### 15.5 `.mcp.json` y claves
+
+El archivo `.mcp.json` se versiona (se commitea). La documentación muestra cómo usar variables en vez del valor real:
+
+```json
+{
+  "mcpServers": {
+    "shared-server": {
+      "type": "http",
+      "url": "https://api.example.com/mcp",
+      "headers": { "Authorization": "Bearer ${API_KEY}" }
+    }
+  }
+}
+```
+
+`${VAR}` se expande desde variables de entorno. **Nunca escribas la clave real dentro de `.mcp.json`**, porque el archivo se sube al repositorio. Para servidores `stdio`, el ejemplo oficial pasa una clave con `--env NOMBRE=VALOR`; eso deja el valor en tu historial de terminal y en tu configuración local, así que trátalo como un secreto.
+
+### 15.6 Seguridad de los conectores (todo de la documentación oficial salvo lo indicado)
+
+- **"Verifica que confías en cada servidor antes de conectarlo. Los servidores que traen contenido externo pueden exponerte a prompt injection."**
+- Claude Code **pide aprobación** antes de usar servidores de un `.mcp.json` en sesiones interactivas. **Las ejecuciones sin interfaz (`-p`) no muestran ese aviso y cargan los servidores del proyecto sin preguntar.**
+- Un repositorio clonado **no puede aprobarse a sí mismo** con configuraciones commiteadas en una carpeta no confiable: el servidor queda "pendiente de aprobación".
+- Los **plugins y los conectores de claude.ai pueden añadir servidores fuera del repositorio**, así que revisar `.mcp.json` no muestra todos los que una sesión puede cargar.
+- Las credenciales OAuth solo se envían a endpoints HTTPS o localhost.
+- `claude mcp remove` **borra el token guardado pero no lo revoca** en el servidor de autorización. Si importa que quede inválido, ejecuta primero `claude mcp logout <nombre>`.
+- Anthropic recomienda **escribir tus propios servidores MCP o usar los de proveedores en los que confíes**, y puedes configurar permisos por servidor.
+- **Un conector con permisos de escritura puede actuar en tu nombre** (enviar correos, borrar archivos). Según fuentes secundarias se pueden restringir acciones (por ejemplo, permitir buscar y resumir correo pero no enviarlo). Da el mínimo de permisos.
+- **Planes:** qué conectores están disponibles según plan varía entre fuentes secundarias (por ejemplo, Microsoft 365 solo en Team y Enterprise). Confírmalo en el artículo de ayuda de Anthropic.
+
+### 15.7 Conectores recomendados para empezar (criterio)
+
+Empieza con **uno** y de solo lectura: tu documentación o tus notas. Evita en las primeras semanas los que pueden enviar mensajes, pagar o borrar. Cada conector que añades es una puerta de entrada de datos no confiables y una salida posible de tus datos.
+
+---
+
+## 16. Cursos gratuitos de Anthropic y certificados
+
+**Fuente y límite:** no pude abrir `anthropic.skilljar.com` desde esta sesión (el dominio está fuera de la red permitida). Los nombres de los cursos vienen del resultado de búsqueda de esa página y de blogs; el número de cursos y el texto de los certificados **varían entre fuentes**. Verifícalo tú en el sitio oficial. Si quieres que lo lea yo, hay que permitir ese dominio en la configuración de red de la sesión.
+
+**Qué se sabe (fuentes secundarias, coinciden en lo esencial):**
+- **Anthropic Academy** corre en Skilljar (`anthropic.skilljar.com`; también se llega desde `anthropic.com/learn`). Es **gratuito** y para registrarte basta un correo.
+- **Cantidad:** 13, 14, 15, 17, 18, 20 o 22 cursos según el artículo y la fecha.
+- **Certificado:** al completar un curso se obtiene un certificado que se puede compartir en LinkedIn ("Add to LinkedIn" de Skilljar, según una fuente). **Una reseña advierte que el certificado "certifica asistencia"**: confirma que completaste el curso, no que dominas la materia. Algunos cursos podrían mostrar solo una insignia; revisa la ficha de cada uno.
+
+**Cursos que aparecen en el catálogo oficial según la búsqueda:**
+
+| Curso | Para qué sirve | Nivel (según fuentes) |
+|---|---|---|
+| **Claude 101** | Uso básico de Claude | Principiante |
+| **AI Fluency: Framework & Foundations** | Pensar y trabajar con IA de forma responsable | Principiante |
+| **Claude Code 101** | Primeros pasos con Claude Code | Principiante |
+| **Claude Code in Action** | Integrar Claude Code a un flujo de trabajo: leer archivos, ejecutar comandos, modificar código, contexto, GitHub (≈1 hora) | Intermedio |
+| **Skills in Claude Code** | Skills (según una fuente secundaria; verifica que exista con ese nombre) | — |
+| **Introduction to Model Context Protocol** | Construir servidores y clientes MCP con Python | Intermedio a avanzado |
+| **Model Context Protocol: Advanced Topics** | MCP avanzado | Avanzado |
+| **Building with the Claude API** | Usar la API de Claude | Desarrollador |
+
+**Orden sugerido (mi recomendación, de básico a avanzado):** Claude 101 → AI Fluency → Claude Code 101 → Claude Code in Action → (Skills) → Intro a MCP → API → MCP avanzado. Hazlos *antes* de instalar repos de terceros: te dan el vocabulario para entender qué ejecuta cada cosa.
+
+**Sobre LinkedIn:** publica el certificado con su nombre exacto ("certificado de finalización de curso"), sin presentarlo como una certificación profesional. Es honesto y sigue sumando.
+
+---
+
+## 17. Seguridad al ir rápido: qué cuidar antes de pasar a repos y agentes
+
+### 17.1 La regla de oro sobre tus claves de API
+
+**No le pegues tu clave de API (ni contraseñas ni tokens) a Claude, ni a ningún chat, ni a un archivo que el agente pueda leer.** Razones:
+- Lo que escribes en una conversación se envía a servidores externos y queda en el historial de la sesión. Una clave así deja de ser privada.
+- Un agente puede incluir esa clave en un archivo, un commit o un comando sin que lo notes.
+- Una skill o una página maliciosa puede intentar convencer al agente de que la envíe a otro lado (prompt injection).
+
+**Cómo manejarlas bien:**
+1. **Variables de entorno** o un **gestor de secretos**, no texto en archivos del proyecto. `.env` fuera del control de versiones (`.gitignore`).
+2. **Una clave por integración**, con el mínimo de permisos (si se filtra una de solo lectura, el daño es mucho menor).
+3. **Límites de gasto y alertas** en el panel del proveedor (no pude verificar la documentación de Anthropic porque `docs.anthropic.com` no es accesible desde esta sesión; revísalo en tu consola).
+4. **Rota las claves** de forma periódica y cada vez que sospeches algo.
+5. **Bloquea que el agente lea tus secretos** en Claude Code. La documentación oficial indica reglas de denegación de lectura. Ejemplo en `.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "deny": ["Read(./.env)", "Read(./secrets/**)"]
+  }
+}
+```
+
+   **Límites que la propia documentación reconoce:** las reglas `Read` se aplican **con el mejor esfuerzo** a las herramientas de lectura integradas, y **un comando Bash que apruebes puede seguir leyendo cualquier archivo que tu usuario pueda leer**. Para restringir Bash a nivel de sistema operativo, usa el **sandbox** (`/sandbox`). Un archivo `.claudeignore` **no tiene efecto**: pasa sus entradas a reglas `Read` de denegación. La documentación tiene una página con un ejemplo listo ("Exclude sensitive files").
+6. **Cómo guarda Claude Code sus propias credenciales (documentación oficial):** en el llavero de macOS si está disponible; en Linux en un archivo con permisos `0600`; en Windows en un archivo que hereda los permisos de tu perfil.
+
+### 17.2 Si se filtra una clave
+
+Según guías de seguridad (fuentes secundarias, coinciden entre sí):
+1. **Revócala o rótala primero**, antes de limpiar nada.
+2. Genera una nueva, invalida la filtrada y actualiza los sistemas que la usan.
+3. Borrar el archivo o reescribir el historial de git **no basta**: la clave sigue alcanzable. Un estudio de Truffle Security halló que en más del 50% de los casos las claves seguían activas después de retirarlas de GitHub (cifra de un blog, no verificada por mí).
+4. Si rotas pero vuelves a escribir la clave nueva en el mismo lugar, el problema se repite.
+5. Activa el **escaneo de secretos y la protección de push** de GitHub.
+
+### 17.3 Cuidados al apurarte con repos y agentes
+
+1. **Un cambio a la vez.** Añade una herramienta, úsala una semana, y recién entonces la siguiente. Si instalas diez cosas el mismo día, no sabrás cuál causó un problema.
+2. **Entorno aislado para lo desconocido.** Una máquina virtual o contenedor sin tus cuentas ni claves. Lo recomienda la documentación de Claude Code ("usa máquinas virtuales para ejecutar scripts y llamadas a herramientas, sobre todo con servicios web externos").
+3. **Aprende los modos de permiso.** La documentación indica que el modo automático (un clasificador revisa las acciones en lugar de ti) es el modo inicial de las sesiones interactivas en terminal y VS Code. Mientras aprendes, conviene usar el modo manual y ver cada acción; revisa `/permissions` y la página de modos de permiso.
+4. **Tú eres responsable de revisar** lo que apruebas. Lo dice la documentación: "eres responsable de revisar el código y los comandos propuestos antes de aprobarlos".
+5. **Nunca uses banderas de "aceptar todo"** (`--autoyes`, `bypassPermissions`, "dangerously-skip-permissions") fuera de un entorno desechable.
+6. **No ejecutes instaladores `curl | bash`** ni `npx paquete@latest` de proyectos que no conoces. Usa el procedimiento "extraer, no instalar" (sección 2.1).
+7. **Fija versiones** y anota el commit del que copiaste algo.
+8. **Haz commit de tu trabajo antes de dejar que un agente edite**, para poder volver atrás.
+9. **Pon topes de gasto y de pasos** en cualquier agente autónomo.
+10. **Trata todo contenido externo como no confiable:** páginas web, PDF, ofertas de empleo, README, resultados de herramientas. Si un texto parece darte órdenes, es una señal de alarma.
+11. **No uses cuentas reales en pruebas** (correo, redes, banco). Cuentas secundarias o de prueba.
+12. **Desconfía de las estrellas y de los influencers.** Las estrellas se pueden inflar, y las listas "10 repos imprescindibles" de redes sociales no son una revisión de seguridad. Verifica el dueño real del repo (varios de tus enlaces tenían errores de nombre).
+13. **Clones y copias falsas:** hay repos con nombres casi iguales a los oficiales (typosquatting). Entra siempre desde el sitio del proyecto o del autor.
+14. **Cierra la sesión de lo que ya no uses:** revoca tokens OAuth de conectores que dejaste conectados.
+
+### 17.4 Un mapa de amenazas sencillo
+
+| Amenaza | Qué es | Defensa principal |
+|---|---|---|
+| **Prompt injection** | Texto en un contenido externo que intenta dar órdenes al agente | Tratar todo contenido externo como dato, aprobar acciones, aislar |
+| **Skill o plugin malicioso** | Instrucciones o scripts dañinos disfrazados de herramienta útil | Leer completo, extraer solo texto inerte, entorno aislado |
+| **Cadena de suministro** | Dependencias o descargas en la instalación (`npx`, `curl \| bash`, `postinstall`) | Fijar versiones, no ejecutar instaladores sin leer |
+| **Filtración de secretos** | Claves en chats, commits, `.env` o logs | Variables de entorno, reglas de denegación, rotación, escaneo |
+| **Permisos excesivos** | Conector o agente con más acceso del necesario | Mínimo privilegio, modo manual al aprender, sandbox |
+| **Robo de sesión** | Herramientas que copian cookies o perfiles de navegador | Cuentas secundarias, no entregar tu perfil real |
+| **Costos descontrolados** | Un agente que llama APIs de pago en bucle | Topes de gasto y de pasos |
+| **Datos a terceros** | Tu información viaja a proveedores de modelos o servicios | Leer políticas, minimizar lo que envías |
+
+**Recordatorio de la documentación oficial:** "aunque estas protecciones reducen significativamente el riesgo, ningún sistema es completamente inmune a todos los ataques."
+
+---
+
+## 18. Ruta de aprendizaje sugerida (mi propuesta)
+
+Es mi propuesta de orden; ajústala a tu tiempo.
+
+| Etapa | Qué hacer | Qué debes entender al terminar |
+|---|---|---|
+| **1. Fundamentos** | Cursos Claude 101 y AI Fluency; leer los conceptos de la sección 14.2 | Qué es un modelo, token, prompt, contexto, alucinación |
+| **2. Claude Code** | Claude Code 101 y Claude Code in Action, en modo manual de permisos | Qué hace cada permiso y por qué importa aprobar con criterio |
+| **3. Seguridad base** | Aplicar la sección 17.1 (reglas `Read` para `.env`, claves en variables de entorno) | Dónde viven tus secretos y quién puede leerlos |
+| **4. Skills** | Extraer 2 o 3 skills oficiales de `anthropics/skills` con el método de la sección 2.1 | La diferencia entre texto inerte y código que se ejecuta |
+| **5. Conectores** | Conectar **un** servidor MCP de solo lectura; curso de MCP | Qué ve y qué puede hacer cada conector |
+| **6. Un solo carril** | Un Playwright headless aislado (sección 6) | Aislamiento y límites de seguridad |
+| **7. Gestor de sesiones** | Probar uno oficial o de AWS Labs con una tarea pequeña y tope de gasto | Worktrees, aprobaciones, presupuesto |
+| **8. Decidir orquestador** | Con tus flujos reales, decidir según la sección 5 | Qué construir y qué reutilizar |
+
+**Proyectos de práctica (sección 19):** a partir de la etapa 5, elige uno por mes (RAG híbrido, caché semántica o Text-to-SQL de solo lectura primero). **Iceberg (sección 20):** avanza un nivel solo cuando puedas explicar el anterior.
+
+**Señal de que vas demasiado rápido:** instalaste algo que no sabes explicar con tus palabras, o diste a un agente acceso a una cuenta real.
+
+
+## 19. Proyectos de IA "valorados" para el portafolio (post de Instagram)
+
+**Fuente:** 4 capturas de un reel de Instagram titulado *"Actually good AI Engineering Projects for your resume"* (cuenta que aparece como `bashi_fuirkashi`, con insignia de verificado; publicado "hace 1 día" respecto de tu captura). Es la opinión de un creador de contenido, **no una fuente verificada**. El post termina con: *"Comenta 'GOOD' y te envío por DM mi guía completa de 27 proyectos"*. **Solo se ven 8 de los 27 proyectos** en tus capturas; los otros 19 no los conozco.
+
+**Sobre el gancho del post:** pedir que comentes una palabra para enviarte un DM es una técnica de captación de contactos. No es peligroso en sí mismo, pero desconfía de enlaces y archivos que lleguen por ese DM (phishing) y no entregues datos personales ni claves para recibir la guía.
+
+### 19.1 Los 8 proyectos visibles
+
+La columna "Qué construyes" es lo que dice el post. "Qué aprendes" y "Cuidado" son mi explicación.
+
+| # | Proyecto | Qué construyes (según el post) | Stack (según el post) | Qué aprendes (mi explicación) | Cuidado de seguridad |
+|---|---|---|---|---|---|
+| 1 | **RAG Pipeline with Hybrid Search** | Combinar búsqueda por palabras clave y búsqueda semántica para responder preguntas sobre documentos de una empresa, con citas de la fuente. | Python, ChromaDB, BM25, FastAPI | RAG, embeddings, chunking y por qué mezclar dos tipos de búsqueda (sección 14.2). | Los documentos son contenido no confiable (inyección de instrucciones). Si hay documentos con distintos permisos, cada usuario debe ver solo lo suyo. |
+| 2 | **Agent Orchestration System** | Agentes que dividen tareas, usan herramientas, recuerdan contexto y **piden aprobación humana**. | Python, LangGraph, PostgreSQL, Redis | Orquestación (sección 5): es exactamente el tipo 2, un framework que programas tú. Es tu mejor proyecto de práctica para la Fase 2. | Aprobación humana para acciones irreversibles, topes de gasto y de pasos, registro de acciones (reglas mínimas de la sección 5.3). |
+| 3 | **Model Regression Detection System** | Probar automáticamente cambios de prompts y modelos para detectar respuestas peores antes de que lleguen a los usuarios. | Python, DeepEval, GitHub Actions, Docker | Evaluaciones (evals) y pruebas automáticas. | Las claves de API van en **GitHub Secrets**, nunca en el repo (la documentación de Claude Code lo advierte). |
+| 4 | **LLM Cost Autopilot** | Enviar peticiones a modelos más baratos cuando pueden resolver la tarea y luego revisar la calidad de la respuesta. | Python, FastAPI, Scikit-learn, Streamlit | Control de costos. La documentación de subagentes de Claude Code plantea la misma idea: tareas rutinarias en un modelo más barato como Haiku. | Un enrutador mal calibrado puede mandar datos sensibles a un proveedor equivocado. |
+| 5 | **Semantic Caching Layer** | Reutilizar respuestas de preguntas parecidas para reducir llamadas repetidas al LLM, tiempos de respuesta y costos. | Python, Redis, RedisVL, FastAPI | Es la **caché semántica** del libro (sección 14.2), en código. | Separar la caché por usuario o permisos; no cachear datos personales sin control. |
+| 6 | **Text-to-SQL with Guardrails** | Convertir preguntas en español o inglés a consultas de base de datos, con validación y **acceso de solo lectura**. | Python, PostgreSQL, SQLAlchemy, FastAPI | Seguridad aplicada: el modelo genera SQL, pero un usuario de base de datos de solo lectura limita el daño. | Es el proyecto más relevante para ciberseguridad: una inyección de instrucciones puede terminar en una consulta peligrosa. El acceso de solo lectura y la validación son la defensa. |
+| 7 | **Fine-Tuning Pipeline with LoRA** | Personalizar un modelo para una tarea, registrar experimentos y compararlo con el original. | Hugging Face PEFT, TRL, Unsloth, Weights & Biases | Ajuste fino (fine-tuning) con LoRA, que ajusta una parte pequeña del modelo. Requiere GPU y datos de entrenamiento. | Los datos de entrenamiento no deben contener secretos ni datos personales: el modelo puede memorizarlos. |
+| 8 | **Failure Forensics Tool for AI Pipelines** | Rastrear cada paso de un flujo de IA para encontrar dónde falló y convertir los fallos en casos de prueba. | Python, OpenTelemetry, SQLite, Streamlit | Observabilidad: ver qué hizo cada paso. | Los registros pueden guardar prompts y datos sensibles; decide qué se guarda y por cuánto tiempo. |
+
+### 19.2 Glosario del stack (explicación mía, de conocimiento general)
+
+- **FastAPI:** biblioteca de Python para crear APIs web.
+- **ChromaDB / RedisVL:** bases de datos o bibliotecas para guardar y buscar embeddings.
+- **BM25:** algoritmo clásico de búsqueda por palabras clave (la parte "no semántica" de una búsqueda híbrida).
+- **Redis:** almacén en memoria muy rápido, usado para cachés y colas.
+- **PostgreSQL / SQLite / SQLAlchemy:** bases de datos y la herramienta de Python para hablar con ellas.
+- **LangGraph:** framework de LangChain para flujos de agentes con estado (sección 5).
+- **DeepEval:** biblioteca para evaluar respuestas de modelos de lenguaje.
+- **GitHub Actions / Docker:** automatización en GitHub y contenedores.
+- **scikit-learn / Streamlit:** aprendizaje automático clásico y paneles web rápidos.
+- **PEFT, TRL, Unsloth:** bibliotecas para ajuste fino eficiente; **Weights & Biases:** registro de experimentos.
+- **OpenTelemetry:** estándar abierto para rastrear lo que hace un sistema.
+
+### 19.3 Orden de práctica sugerido (mi criterio)
+
+1. **Primero (más simples):** #1 RAG híbrido, #5 caché semántica, #6 Text-to-SQL con solo lectura.
+2. **Luego:** #4 enrutador de costos, #3 detección de regresiones, #8 forense de fallos.
+3. **Al final (más complejos):** #2 orquestación de agentes y #7 ajuste fino con LoRA.
+
+**Conexión con tu pregunta principal:** el proyecto #2 es literalmente "construir tu propio orquestador". Hacerlo como proyecto de aprendizaje, con aprobación humana y topes de gasto, encaja con la Fase 2 de la sección 5, después de haber usado uno existente.
+
+**Sobre "para el currículum":** que un proyecto "se vea bien en un CV" es la opinión del autor del post y no la pude verificar. Lo que sí demuestra algo es poder **explicar cómo lo construiste, qué falla y cómo lo aseguraste**.
+
+---
+
+## 20. El iceberg de Claude Code: 30 términos de lo básico a lo avanzado
+
+**Fuente de los términos:** un reel de Instagram de la cuenta `duckstreak` ("Claude Code terms, beginner to expert: the iceberg"; "all 30"). **Fuente de las explicaciones:** documentación oficial de Claude Code (code.claude.com/docs) leída el 2026-11-14. Las funciones cambian rápido y varias exigen una versión mínima de Claude Code; verifica con `/help` y la documentación.
+
+Marcas: ✔ = confirmado en la documentación oficial.
+
+### Nivel 1: "Tip" (superficie)
+
+| Término | Qué es | Cuidado |
+|---|---|---|
+| **CLAUDE.md** ✔ | Archivo de instrucciones persistentes que Claude carga al inicio de cada sesión. | La documentación aclara que Claude lo trata como **contexto, no como configuración obligatoria**. Para bloquear una acción de forma garantizada se usa un hook `PreToolUse`. No escribas secretos aquí: el archivo suele versionarse. |
+| **/init** ✔ | Inicializa un proyecto con una guía `CLAUDE.md`. | Revisa lo que genera antes de commitearlo. |
+| **Plan mode** ✔ | Claude explora y escribe un plan **sin editar el código fuente** hasta que lo apruebes. Se entra con `/plan`. | Es un buen modo para aprender: ves la intención antes de la acción. |
+| **/clear** ✔ | Empieza una conversación nueva con el contexto vacío (alias `/reset`, `/new`). | La conversación anterior se recupera con `/resume`. |
+| **/compact** ✔ | Libera contexto resumiendo la conversación hasta ahora. | El resumen puede perder detalles; indica en qué enfocarse. |
+| **/model** | Cambia el modelo que usa la sesión (la documentación lo cubre en "Model configuration"; no leí esa página completa). | Modelos más potentes gastan más. |
+
+### Nivel 2: "Shallows" (aguas poco profundas)
+
+| Término | Qué es | Cuidado |
+|---|---|---|
+| **/rewind** ✔ | Retrocede la conversación y/o el código a un punto anterior (alias `/checkpoint`, `/undo`). | Aun así, usa git como respaldo real. |
+| **/resume** ✔ | Reanuda conversaciones anteriores. | — |
+| **Skills** ✔ | Carpetas con `SKILL.md` que dan instrucciones para una tarea. Pueden traer scripts. | **Las líneas `` !`comando` `` se ejecutan al cargar la skill, antes de que Claude la lea**, y `allowed-tools` pre-aprueba herramientas. Revisa ambos en cualquier skill de terceros (sección 2.1). |
+| **MCP** ✔ | Estándar para conectar herramientas externas (sección 15). | Verifica que confías en cada servidor. |
+| **Auto mode** ✔ | Un modelo clasificador revisa las acciones **en lugar de ti** y bloquea las que juzga inseguras. | La documentación dice que **no garantiza seguridad** y no reemplaza la revisión en operaciones sensibles. |
+| **Auto memory** ✔ | Notas que Claude escribe por sí mismo según tus correcciones y preferencias; se cargan al inicio (primeras 200 líneas o 25 KB). Se gestiona con `/memory`. | Puede guardar datos que mencionaste; revisa `/memory` y no menciones secretos. |
+
+### Nivel 3: "Deep" (profundo)
+
+| Término | Qué es | Cuidado |
+|---|---|---|
+| **Hooks** ✔ | Comandos de shell definidos por ti que Claude Code ejecuta en momentos del ciclo de vida (por ejemplo, tras editar un archivo). Dan control **determinista**: pasan siempre, no dependen de que el modelo decida. | **Se ejecutan con tus permisos.** Es lo primero que hay que leer en cualquier plugin de terceros. |
+| **Subagents** ✔ | Asistentes especializados con su propia ventana de contexto, instrucciones, herramientas y permisos; devuelven solo un resumen. | Consumen tokens. Por defecto hasta 20 simultáneos y hasta 3 niveles de anidación. Heredan los permisos del principal. |
+| **Plugins** ✔ | Paquete de skills, agentes, hooks y servidores MCP que se instala como una unidad. | **Lo que el plugin ejecuta, lo ejecuta como tú.** Un plugin habilitado forma parte de todas tus sesiones, no solo de cuando lo usas. |
+| **Rules** ✔ | Instrucciones en `.claude/rules/` limitadas a ciertos tipos de archivo. | Son contexto, no una barrera. |
+| **Output styles** ✔ | Cambian rol, tono y formato de las respuestas: Default, Proactive, Concise, Explanatory, Learning, o los tuyos. | Son instrucciones que Claude sigue, no garantías. **Proactive** hace que Claude empiece a trabajar sin preguntar decisiones rutinarias: no lo uses mientras aprendes. |
+| **Status line** ✔ | Barra inferior personalizable que ejecuta un script que tú configuras y recibe datos de la sesión (contexto, costo, git). | **Ejecuta un comando con acceso completo**; el sandbox no la cubre. Usa solo scripts que entiendas. |
+
+### Nivel 4: "Dark" (oscuro)
+
+| Término | Qué es | Cuidado |
+|---|---|---|
+| **Non-interactive mode** ✔ | `claude -p "..."`: ejecuta sin interfaz, para scripts y CI. | **No muestra el diálogo de confianza de carpeta ni la aprobación de servidores MCP.** Sin `--bare`, carga los hooks y servidores del proyecto incluso en una carpeta que nunca has aprobado. No lo ejecutes sobre repos desconocidos. |
+| **Channels** ✔ | Un servidor MCP que **empuja eventos** (Telegram, Discord, iMessage, webhooks) a tu sesión en curso. Función en "research preview". | Cualquiera que pueda responder por el canal puede **aprobar o denegar usos de herramientas** si el canal lo permite; solo se debe incluir en la lista de permitidos a quien confíes. Evítalo hasta dominar permisos. |
+| **PreToolUse hooks** ✔ | Hooks que corren **antes** de que Claude use una herramienta y pueden bloquearla. | Es la forma documentada de **garantizar** una regla (por ejemplo, bloquear leer `.env`). Un script mal escrito puede dar falsa seguridad. |
+| **Sandboxing** ✔ | Frontera aplicada por el sistema operativo alrededor de los comandos Bash: limita archivos y hosts de red. Se activa con `/sandbox`. Funciona en macOS, Linux y WSL2; **está desactivado por defecto**. | **No protege** las herramientas Read/Edit/Write, WebFetch, WebSearch ni los servidores MCP, hooks, líneas de estado o plugins. Los archivos de credenciales siguen legibles salvo que los restrinjas. |
+| **Worktrees** ✔ | `claude --worktree nombre`: sesión aislada en su propio directorio y rama (sección 5). | El archivo `.worktreeinclude` **copia archivos ignorados por git, como `.env`, a cada worktree nuevo**: tus secretos se multiplican por cada copia. |
+| **Bare mode** ✔ | `--bare`: arranque rápido que **omite** hooks, skills, plugins, MCP, auto memory y `CLAUDE.md`. Recomendado para scripts; la documentación dice que será el predeterminado de `-p` en el futuro. | Requiere `ANTHROPIC_API_KEY` en el entorno (no usa tu inicio de sesión). Es más seguro frente a hooks ajenos, pero tú pasas el contexto a mano. |
+
+### Nivel 5: "Abyss" (abismo)
+
+| Término | Qué es | Cuidado |
+|---|---|---|
+| **Claude in GitHub Actions** ✔ | Acción oficial (`anthropics/claude-code-action`): mencionas `@claude` en un issue o PR y Claude analiza, implementa y publica cambios. | La clave va como **GitHub Secret**, nunca en el repo. La app de GitHub pide un conjunto amplio de permisos (Actions, Contents, Issues, Pull requests, Workflows, entre otros); GitHub no deja aceptar solo una parte. Revisa los cambios antes de fusionar. |
+| **Agent SDK** ✔ | Biblioteca (Python y TypeScript) con las herramientas y el bucle de agente de Claude Code, para tus propias aplicaciones. | Se autentica con clave de API. Hereda las herramientas de Claude Code, así que restringe permisos (sección 5.2). |
+| **Your own MCP server** | Escribir tu propio servidor MCP. | La documentación recomienda **escribir tus propios servidores o usar los de proveedores de confianza**. Curso "Introduction to MCP" (sección 16). |
+| **Agent teams** ✔ | Varias sesiones de Claude Code coordinadas, con lista de tareas compartida y mensajes entre ellas. **Experimental y desactivado por defecto.** | Gasta **muchos más tokens**. Los compañeros empiezan con el modo de permisos del líder, **incluido `bypassPermissions`**. Con la función activada, Claude puede formar equipos aunque no los hayas pedido. |
+| **Dynamic workflows** ✔ | Un script de JavaScript que Claude escribe y que orquesta decenas o cientos de subagentes en segundo plano; se pueden guardar y reutilizar. Se activan pidiéndolo o con la palabra `ultracode`. | Pueden gastar mucho. Hay un tope de 1,000 agentes por ejecución y 16 simultáneos por defecto. En modo bypass no pide aprobación. Lee el plan antes de aprobar. |
+| **Plugin marketplace** ✔ | Catálogo de plugins. Anthropic publica el **oficial** (`claude-plugins-official`) y el **comunitario** (`claude-community`); cualquiera puede publicar uno de terceros. | **Anthropic no revisa los marketplaces de terceros.** Incluso en el oficial, la documentación dice que **la mayor parte de lo que lista viene de socios y otros autores, no de Anthropic**. En el sitio claude.com/marketplace algunos plugins llevan la marca "Anthropic verified". Lee la página "Plugin security and trust" antes de instalar. |
+
+### 20.1 Qué te enseña el iceberg sobre seguridad
+
+1. **Cuanto más profundo, más poder y más riesgo.** Los términos de arriba (CLAUDE.md, /clear) cambian cómo conversas; los de abajo (hooks, canales, workflows, equipos de agentes) cambian **qué puede ejecutar el agente sin que lo veas**.
+2. **No bajes de nivel hasta dominar el anterior.** Es la misma regla de "un cambio a la vez" de la sección 17.3.
+3. **Las barreras reales son pocas:** los permisos, el sandbox, los hooks `PreToolUse` y el aislamiento por contenedor o máquina virtual. `CLAUDE.md`, las reglas y los estilos son instrucciones, no barreras.
+4. **El sandbox y los permisos no cubren todo.** Hooks, líneas de estado, servidores MCP locales y plugins corren con tu acceso completo.
+
+---
+
+## 21. Fuentes
 
 **Páginas de repositorios leídas en GitHub (2026-11-14):** anthropics/skills, google/skills, obra/superpowers, microsoft/playwright-mcp, anthropics/claude-quickstarts (y su README de computer-use-demo), browser-use/browser-use, openclaw/openclaw, NousResearch/hermes-agent, latent-spaces/brag, debpalash/VoiceStudio, FujiwaraChoki/supoclip, storytold/artcraft, storytold/photocraft, DietrichGebert/ponytail, ayghri/i-have-adhd, calesthio/OpenMontage, Panniantong/Agent-Reach, usestrix/strix, PaddlePaddle/PaddleOCR, DuarteSantos8/openGym, virgiliojr94/book-to-skill, supabase/supabase, Nutlope/hallmark, blader/humanizer, senlindesign/taste-skill, pbakaus/impeccable, nextlevelbuilder/ui-ux-pro-max-skill, mvanhorn/last30days-skill, D4Vinci/Scrapling, cathrynlavery/diagram-design, onyx-dot-app/onyx, paperclipai/paperclip, abi/screenshot-to-code, neonwatty/logo-designer-skill, morluto/rea, MadsLorentzen/ai-job-search, ifixai-ai/ifixai, smtg-ai/claude-squad, GoogleCloudPlatform/scion, awslabs/cli-agent-orchestrator, anthropics/claude-agent-sdk-python, langchain-ai/langgraph, openai/openai-agents-python, sipyourdrink-ltd/bernstein, dgutierrez1/concurrent-playwright-mcp, sumyapp/playwright-parallel-mcp, andyrewlee/awesome-agent-orchestrators.
 
@@ -622,3 +1000,12 @@ Cada ficha tiene: enlace (✔ = lo abrí en GitHub), publicador, licencia, estre
 - Meta Muse: DEV Community, Fast Company, DataCamp, Digit.
 - OpenArt: openart.ai/features/explainer-video-maker.
 - Linear: Everhour, G2.
+
+**Fuentes añadidas en esta actualización:**
+- Libro: *Generative AI and LLMs For Dummies, Snowflake Special Edition* (Wiley, © 2024), págs. 28 y 30-35 (capturas tuyas).
+- Documentación oficial de Claude Code (code.claude.com/docs), leída el 2026-11-14: MCP, security, permissions, permission-modes, memory, commands, hooks-guide, sub-agents, skills, plugins/overview, plugins/anthropic-marketplaces, output-styles, statusline, headless, channels, sandboxing, worktrees, github-actions, agent-sdk/overview, agent-teams, workflows.
+- Anthropic Academy: resultados de búsqueda sobre el catálogo en anthropic.skilljar.com (no pude abrir el sitio), y blogs (Analytics Vidhya, fast.io, buspa.it, vanja.io, entre otros).
+- Conectores: artículo de ayuda de Anthropic (support.claude.com, "Use connectors to extend Claude's capabilities") por resultado de búsqueda, DEV Community, Zapier, Composio.
+- Claves filtradas: Truffle Security, GitGuardian, Aikido, documentación de GitHub sobre secret scanning (por resultados de búsqueda).
+- Posts de Instagram (capturas tuyas): `bashi_fuirkashi` (proyectos de IA) y `duckstreak` (iceberg de Claude Code). Son contenido de redes sociales, no fuentes verificadas.
+- No accesibles desde esta sesión: docs.anthropic.com, anthropic.skilljar.com, fast.io, reddit.com.
