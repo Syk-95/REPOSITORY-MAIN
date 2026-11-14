@@ -72,3 +72,7 @@ Semana tipo: Lun L, Mar L, Mié R, Jue Q, Vie Q+Q (bloque fuerte), Sáb V+F, Dom
 - Examen mayo 2027: ventana 18–22 may (fuentes de prep providers; confirmar en CFA Institute). Early registration ya cerró el 14-oct-2026; plazo estándar 10-feb-2027.
 - Decisión de inscripción a mayo antes del 10-feb (chequeo semana 12). Revisión de preparación el 11-abr.
 - Ética: material 2027 (reestructurada); LOS 3.e de Machine Learning eliminado desde 2026.
+
+## Actualización (14-nov-2026)
+- Ritmo pomodoro 50/10 (pausa larga de 20 min cada 4). Un bloque de 90 min equivale a ~80 min de foco. Excel y panel alineados.
+- Pendiente de Rodrigo: resumir el Book 1 y anotar páginas de resumen y tiempo (calibración). Lista viva en la hoja Pendientes del Excel.
