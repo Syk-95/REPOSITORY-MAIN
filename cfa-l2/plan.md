@@ -75,4 +75,4 @@ Semana tipo: Lun L, Mar L, Mié R, Jue Q, Vie Q+Q (bloque fuerte), Sáb V+F, Dom
 
 ## Actualización (14-nov-2026)
 - Ritmo pomodoro 50/10 (pausa larga de 20 min cada 4). Un bloque de 90 min equivale a ~80 min de foco. Excel y panel alineados.
-- Pendiente de Rodrigo: resumir el Book 1 y anotar páginas de resumen y tiempo (calibración). Lista viva en la hoja Pendientes del Excel.
+- Pendiente del usuario: resumir el Book 1 y anotar páginas de resumen y tiempo (calibración). Lista viva en la hoja Pendientes del Excel.
