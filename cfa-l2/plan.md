@@ -76,3 +76,10 @@ Semana tipo: Lun L, Mar L, Mié R, Jue Q, Vie Q+Q (bloque fuerte), Sáb V+F, Dom
 ## Actualización (14-nov-2026)
 - Ritmo pomodoro 50/10 (pausa larga de 20 min cada 4). Un bloque de 90 min equivale a ~80 min de foco. Excel y panel alineados.
 - Pendiente del usuario: resumir el Book 1 y anotar páginas de resumen y tiempo (calibración). Lista viva en la hoja Pendientes del Excel.
+
+## Actualización (14-nov-2026, tarde)
+- Vacaciones confirmadas: 11 al 21 de febrero de 2027.
+- Ejercicio: 3 sesiones de 60 min por semana (lun, mié, dom), cuerpo completo A/B con mancuernas, banco y mat. Detalle en la hoja Ejercicio del Excel.
+- Diario del Excel reordenado: columnas G a K se pegan desde el panel (pestaña Registro, Copiar semana).
+- Panel: simulacro con ritmo de examen (12 min por vignette), mini-test a pedido en el Tutor, atajos de teclado, sonido ajustable, exportar e importar datos.
+- Pendiente: libro de preguntas del usuario para el mini-test y los simulacros; flashcards de fórmulas y conceptos (futuro).
